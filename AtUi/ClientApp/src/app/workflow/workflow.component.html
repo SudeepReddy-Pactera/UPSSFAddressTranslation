@@ -1,0 +1,87 @@
+  <div class="routepage">
+    <div class="pageTitle"><span>Workflow</span></div>
+    <br />
+    <div class="row">
+      <div class="col-md-3">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="filterText" placeholder="Filter">
+        </mat-form-field>
+      </div>
+      <div class="col-md-9 text-right">
+        <div class="col-md-5">
+          <form class="example-form">
+            <mat-form-field class="example-full-width" *ngIf="fileNameControl.value!= ''">
+              <input matInput placeholder="Choose file to upload" [formControl]="fileNameControl" name="excelFileName">
+              <mat-hint *ngIf="!isValidFile" style="color:red">
+                Please enter a valid file format(.xlsx or.xls)
+              </mat-hint>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="col-md-4" style="float:right">
+          <div class="form-group">
+            <!--<label for="file" class="btn btn-primary" color="primary">Upload </label>-->
+            <label for="file" class="mat-raised-button" style="background-color: #3f51b5;color: white">Upload </label>
+            <input type="file"
+                   id="file" hidden accept=".xls, .xlsx"
+                   (change)="handleFileInput($event.target.files)" style="width:0px;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons>
+      </mat-paginator>
+      <div class="table-div">
+        <mat-table [dataSource]="dataSource" matSort>
+          <!-- Position Column -->
+          <ng-container matColumnDef="id" class="container">
+            <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Workflow Id </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+
+              <a fxFlexFill [routerLink]="['/shipment',element.id]" class="mat-row-link cell">
+                {{element.id}}
+              </a>
+
+            </mat-cell>
+          </ng-container>
+          <!-- Name Column -->
+          <ng-container matColumnDef="usR_FST_NA" class="container">
+            <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Owner </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="cell">
+              <span class="sort-header">{{element.usR_FST_NA}}</span>
+            </mat-cell>
+          </ng-container>
+          <!-- Weight Column -->
+          <ng-container matColumnDef="flE_NA" class="container">
+            <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> File Name </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="cell">
+              <span class="sort-header">{{element.flE_NA}}</span>
+            </mat-cell>
+          </ng-container>
+          <!-- Symbol Column -->
+          <!--<ng-container matColumnDef="wfL_STA_TE" class="container">
+        <mat-header-cell *matHeaderCellDef class="header-cell"> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <span  class="sort-header">{{workFlowStatus[element.wfL_STA_TE].value}}</span>
+        </mat-cell>
+      </ng-container>-->
+          <ng-container matColumnDef="wfL_STA_TE_TEXT" class="container">
+            <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Status Text</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="cell">
+              <span class="sort-header">{{element.wfL_STA_TE_TEXT}}</span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="crD_DT" class="container">
+            <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Created Date </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="cell">
+              <span class="sort-header">{{element.crD_DT | date: 'MMMM dd, yyyy hh:mm a'}}</span>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+      <app-loader></app-loader>
+    </div>

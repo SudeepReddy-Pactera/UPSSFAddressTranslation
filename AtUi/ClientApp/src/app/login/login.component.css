@@ -1,0 +1,116 @@
+body{
+  overflow:auto;
+}
+.login-block {
+  width: 100%;
+  min-height:100vh;
+  height:100%;
+  background: url(assets/images/translation-bg.png) no-repeat center;
+  float:left;
+  margin: 0;
+  padding: 0;
+  overflow:auto;
+}
+
+.row {
+  background: #FFFFFF;
+  box-shadow: 0 0 20px 8px rgba(0,0,0,0.18);
+  border-radius: 10px;
+  margin: 10% 0% 0% 15%;
+  padding: 0;
+  width: 70%;
+}
+
+.col-md-6 {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  min-height:100%;
+  width: 50%;
+}
+
+.fll {
+  float: left;
+  padding: 5% 5%;
+}
+
+.flr {
+  float: right;
+}
+
+.trans {
+  height: auto;
+  width: 80%;
+}
+
+.logo {
+  margin: 10% 30% 0% 45%;
+  height: auto;
+  width: 10%;
+}
+
+.app-txt {
+  font-size: 2vw;
+  width: auto;
+  margin: 0% 0% 0% 18%;
+  font-family: helvetica;
+  font-weight: 600;
+  color: #351C15;
+  text-align: center;
+}
+
+.usertxt {
+  height: auto;
+  margin: 5% 0% 0px 18%;
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  font-size: 0.8vw;
+  padding: 2%;
+}
+
+.pwdtxt {
+  height: auto;
+  margin: 5% 0% 0px 18%;
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  font-size: 0.8vw;
+  padding: 2%;
+}
+
+.warn {
+  font-size: 13px;
+  font-family: helvetica;
+  margin: 0px 200px 0px 120px;
+  font-weight: 600;
+  color: #CC0000;
+}
+
+.btn {
+  width: 25%;
+  height: 20%;
+  background: #351C15;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 1vw;
+  font-weight: 700;
+  margin: 5% 0% 0% 40%;
+}
+
+input:focus {
+  border: 1px solid #351C15;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.27);
+  border-radius: 4px;
+  outline-color: #FFB200;
+}
+
+input {
+  width: 67%;
+}
+
+.div-alert {
+  font-size: 0.8vw;
+  font-family: helvetica;
+  margin: 0% 0% 0px 18%;
+  font-weight: 600;
+  color: #CC0000;
+}

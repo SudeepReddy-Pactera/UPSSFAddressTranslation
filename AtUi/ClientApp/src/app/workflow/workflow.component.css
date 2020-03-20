@@ -1,0 +1,78 @@
+.routepage {
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc( 100vh - 64px );
+  padding: 0;
+}
+.map-image {
+  width: 400px;
+  height: 330px;
+}
+
+a {
+  text-decoration: underline;
+}
+
+
+::ng-deep snack-bar-container.custom-class-success {
+  background: #F2F2F2;
+  position: absolute;
+  top: 50px;
+  right: 16px;
+}
+
+::ng-deep .custom-class-success .mat-simple-snackbar {
+  color: #339900 !important;
+  font-weight: bold;
+}
+
+::ng-deep snack-bar-container.custom-class-error {
+  background: #F2F2F2;
+  position: absolute;
+  top: 50px;
+  right: 16px;
+}
+
+::ng-deep .custom-class-error .mat-simple-snackbar {
+  color: red !important;
+  font-weight: bold;
+}
+.col-md-2{
+  float:right;
+}
+.table-div {
+  width: 100%;
+  max-height: calc(100vh - 230px );
+  overflow: auto;
+  padding: 0;
+}
+
+mat-row:nth-child(odd) {
+  background: #F2F2F2;
+}
+
+mat-header-row {
+  background-color: gray;
+}
+
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: white;
+}
+
+mat-header-cell {
+  color: white;
+}
+
+mat-cell {
+  font-size: 12px;
+}
+
+mat-header-cell {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+} 
