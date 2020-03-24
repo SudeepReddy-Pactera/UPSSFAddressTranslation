@@ -10,14 +10,18 @@ using System.Text.RegularExpressions;
 
 namespace ExcelFileRead
 {
-    public class cellvalidation
+    public class CellValidation
     {
-        public string colName { get; set; }
+        public string fieldName { get; set; }
 
-        public string regExp { get; set; }
+        public int length { get; set; }
+
+        public string regexValue { get; set; }
+
 
     }
-    
+
+
 
     public class ExcelExtensionReponse
     {
@@ -31,13 +35,11 @@ namespace ExcelFileRead
     public static class DataExtensions
     {
 
-        public static bool HasNull(this System.Data.DataTable table, string regExp)
+        public static bool HasNull(this System.Data.DataTable table)
         {
-            var regexItem = new Regex("[^a-zA-Z]+");
             foreach (DataColumn column in table.Columns)
             {
-
-                if (table.Rows.OfType<DataRow>().Any(r =>  regexItem.IsMatch(r.ToString())))
+                if (table.Rows.OfType<DataRow>().Any(r => r.IsNull(column)))
                 {
                     return true;
                 }
@@ -46,6 +48,10 @@ namespace ExcelFileRead
             return false;
 
         }
+
+
+
+
     }
 
 
@@ -55,7 +61,7 @@ namespace ExcelFileRead
         
 
 
-        public ExcelExtensionReponse Test(string fileName, string[] validationSet, string[] cellValidationSet)
+        public ExcelExtensionReponse Test(string fileName, string[] validationSet, string[] regexSet, string[] columnLengths)
         {
             ExcelExtensionReponse excelExtensionReponse = new ExcelExtensionReponse();
 
@@ -91,11 +97,22 @@ namespace ExcelFileRead
                 if (getDesiredColumnExistence)
                 {
 
+                    for(int i=0;i < result.Tables[0].Columns.Count;i++)
+                    {
+                      bool regexStatus = regexValdiation(result.Tables[0].DefaultView.ToTable(false, result.Tables[0].Columns[i].ColumnName), regexSet[i], Int32.Parse(columnLengths[i]));
+
+                        if (!regexStatus)
+                        {
+                            throw new Exception("'"+result.Tables[0].Columns[i].ColumnName + "' column has identified invalid data");
+                        }
+                    }
+
+
                     foreach (string dataColumn in validationSet)
                     {
-                        if (DataExtensions.HasNull(result.Tables[0].DefaultView.ToTable(true, dataColumn), "[^0-9]+"))
+                        if (DataExtensions.HasNull(result.Tables[0].DefaultView.ToTable(true, dataColumn)))
                         {
-                            throw new Exception(dataColumn + " column has identified invalid data");
+                            throw new Exception("'"+dataColumn + "' column has identified invalid data");
                         }
                     }
 
@@ -177,6 +194,35 @@ namespace ExcelFileRead
             }
 
             return desiredResult;
+        }
+
+
+        public bool regexValdiation(System.Data.DataTable table, string regexItem,int columnLength)
+        {
+
+            var regex = new Regex(regexItem);
+            foreach (DataColumn column in table.Columns)
+            {
+               foreach(DataRow row in table.Rows)
+                {
+                    if (row.ItemArray[0].ToString().Length>0 && row.ItemArray[0].ToString().Length < columnLength)
+                    {
+                        if (!regex.IsMatch(row.ItemArray[0].ToString()))
+                        {
+                            return false;
+                        }
+
+                    }
+                    else if(row.ItemArray[0].ToString().Length > columnLength)
+                    {
+                        return false;
+                    }
+                    
+                }
+
+            }
+            return true;
+
         }
     }
 }

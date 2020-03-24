@@ -117,9 +117,10 @@
                             ExcelExtensionReponse excelExtensionReponse = 
                                 new ExcelExtension()
                                 .Test(
-                                    filePath, 
+                                    filePath,   
                                     configuration.GetSection("ExcelFileValidation:mandatoryFields").GetChildren().Select(val => val.Value).ToArray(),
-                                    configuration.GetSection("ExcelFileValidation:mandatoryFields").GetChildren().Select(val => val.Value).ToArray());
+                                    configuration.GetSection("ColumnValidation:regexList").GetChildren().Select(val => val.Value).ToArray(),
+                                    configuration.GetSection("ColumnValidation:columnLengths").GetChildren().Select(val => val.Value).ToArray());
                             if (excelExtensionReponse.success)
                             {
                                 var excelDataObject2 = JsonConvert.DeserializeObject<List<ExcelDataObject>>(excelExtensionReponse.ExcelExtensionReponseData);
