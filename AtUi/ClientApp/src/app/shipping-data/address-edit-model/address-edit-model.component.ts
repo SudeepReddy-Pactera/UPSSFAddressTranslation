@@ -35,6 +35,8 @@ export class AddressEditModelComponent {
   }
 
   stopEdit(): void {
+
+    console.log(this.data);
     this.dataService.updateIssue(this.data);
   }
 }

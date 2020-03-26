@@ -46,8 +46,11 @@
       <ng-container matColumnDef="actions" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell"> Action </mat-header-cell>
         <mat-cell *matCellDef="let row; let i=index;" class="cell">
-          <button mat-icon-button (click)="startEdit(i,row)">
+          <button mat-icon-button (click)="startEdit(i,row)" *ngIf="row.id!=editID">
             <span><i class="material-icons">edit</i></span>
+          </button>
+          <button mat-icon-button (click)="saveEdit(row)" *ngIf="row.id===editID">
+            <span><i class="material-icons">save</i></span>
           </button>
           <button [disabled]="(row.smT_STA_NR === 2 || row.smT_STA_NR === 3 ||(row.smT_STA_NR === 1 ))" mat-icon-button (click)="rowTranslate(i,row)">
             <span><i class="material-icons">translate</i></span>
@@ -84,7 +87,12 @@
       </ng-container>
       <ng-container matColumnDef="shP_ADR_TR_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{element.shP_ADR_TR_TE}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <input [(ngModel)]="element.shP_ADR_TR_TE" *ngIf="element.id===editID" style="width:250px">
+          <div *ngIf="element.id!=editID">
+            {{element.shP_ADR_TR_TE}}
+          </div>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="translation_score" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translation Score </mat-header-cell>
@@ -128,7 +136,12 @@
       </ng-container>
       <ng-container matColumnDef="coD_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> COD </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{element.coD_TE}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <input [(ngModel)]="element.coD_TE" *ngIf="element.id===editID" style="max-width:130px">
+          <div *ngIf="element.id!=editID">
+            {{element.coD_TE}}
+          </div>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="coN_NR" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Confidence </mat-header-cell>
@@ -149,7 +162,16 @@
 
       <ng-container matColumnDef="poD_RTN_SVC" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Extra Service </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{PODoptions[element?.poD_RTN_SVC!=null ?element.poD_RTN_SVC:0].value}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <mat-select [(ngModel)]="element.poD_RTN_SVC" name="poD_RTN_SVC" *ngIf="element.id===editID">
+            <mat-option *ngFor="let option of PODoptions" value="{{option.key}}">
+              {{option.value}}
+            </mat-option>
+          </mat-select>
+          <div *ngIf="element.id!=editID">
+            {{PODoptions[element?.poD_RTN_SVC!=null ?element.poD_RTN_SVC:0].value}}
+          </div>
+        </mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>

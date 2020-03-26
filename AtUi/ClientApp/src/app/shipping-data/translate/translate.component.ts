@@ -44,14 +44,18 @@ export class TranslateComponent implements OnInit {
   public dataForTranslate: any[] = [];
   filterText: string = '';
   toggleSelectAll: string = 'Select All';
-
+  editID: any = 0;
+  codId: any;
+  translatedAdd: any;
+  extraService: any;
   constructor(private shippingService: ShippingService, private activatedRoute: ActivatedRoute,
     private router: Router, public dialog: MatDialog,
     public dataService: DataService,
     private snackBar: MatSnackBar,
     private dialogService: DialogService,
     private excelService: ExcelService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+  ) {
   }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -184,39 +188,27 @@ export class TranslateComponent implements OnInit {
     }
   }
 
-  startEdit(i: number, shipmentDetailToUpdate: any) {
-    let shipmentDetails = shipmentDetailToUpdate;
-    const dialogRef = this.dialog.open(AddressEditModelComponent, {
-      data: {
-        Id: shipmentDetailToUpdate.id,
-        rcV_ADR_TE: shipmentDetailToUpdate.rcV_ADR_TE,
-        shP_ADR_TR_TE: shipmentDetailToUpdate.shP_ADR_TR_TE,
-        coD_TE: shipmentDetailToUpdate.coD_TE,
-        pkG_NR_TE: shipmentDetailToUpdate.pkG_NR_TE,
-        rcV_CPY_TE: shipmentDetailToUpdate.rcV_CPY_TE,
-        poD_RTN_SVC: shipmentDetailToUpdate.poD_RTN_SVC,
-        is__ADR_TR_TE_Required: ((shipmentDetailToUpdate.smT_STA_NR === 0) ? false : true)
-      }
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 1) {
-        let updatedDetails = this.dataService.getDialogData();
-        if (updatedDetails.coD_TE == shipmentDetailToUpdate.coD_TE
-          && updatedDetails.shP_ADR_TR_TE.toLowerCase() == shipmentDetailToUpdate.shP_ADR_TR_TE.toLowerCase()
-          && updatedDetails.poD_RTN_SVC == shipmentDetailToUpdate.poD_RTN_SVC) {
-
-          this.notificationService.openSuccessMessageNotification("No changes found to update");
-          return;
-        }
-
-        const details = {
-          SHP_ADR_TR_TE: updatedDetails.shP_ADR_TR_TE.trim(),
-          COD_TE: updatedDetails.coD_TE,
-          WFL_ID: shipmentDetails.wfL_ID,
-          ID: shipmentDetails.id,
-          POD_RTN_SVC: updatedDetails.poD_RTN_SVC,
-          RCV_ADR_TE: shipmentDetails.rcV_ADR_TE
+  saveEdit(shipmentDetailToUpdate: any) {
+    var regex = new RegExp('^[0-9]{0,6}(\.[0-9]([0-9])?)?$');
+    if (!regex.test(shipmentDetailToUpdate.coD_TE)) {
+      this.notificationService.openSuccessMessageNotification("Please Enter valid COD. Hint : Supported digit format: Max 6 digit with 2 decimal number (Ex. 999999.99)");
+      return;
+    }
+    if (this.codId == shipmentDetailToUpdate.coD_TE
+      && this.translatedAdd.toLowerCase() == shipmentDetailToUpdate.shP_ADR_TR_TE.toLowerCase()
+      && this.extraService == shipmentDetailToUpdate.poD_RTN_SVC) {
+      this.notificationService.openSuccessMessageNotification("No changes found to update");
+      this.editID = 0;
+      return;
+    }
+     const details = {  
+       SHP_ADR_TR_TE: shipmentDetailToUpdate.shP_ADR_TR_TE.trim(),
+       COD_TE: shipmentDetailToUpdate.coD_TE,
+       WFL_ID: shipmentDetailToUpdate.wfL_ID,
+       ID: shipmentDetailToUpdate.id,
+       POD_RTN_SVC: shipmentDetailToUpdate.poD_RTN_SVC,
+       RCV_ADR_TE: shipmentDetailToUpdate.rcV_ADR_TE
         }
 
         this.shippingService.UpdateShippingAddress(details).subscribe((response: any) => {
@@ -230,8 +222,79 @@ export class TranslateComponent implements OnInit {
           this.notificationService.openSuccessMessageNotification("Data Updated Successfully.");
         },
           error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText))
-      }
-    });
+  
+
+    this.editID = 0;
+    console.log(details);
+    //this.dataService.updateIssue(data);
+
+  }
+
+  startEdit(i: number, shipmentDetailToUpdate: any) {
+    console.log(shipmentDetailToUpdate);
+    this.codId = shipmentDetailToUpdate.coD_TE;
+    this.translatedAdd = shipmentDetailToUpdate.shP_ADR_TR_TE;
+    this.extraService = shipmentDetailToUpdate.poD_RTN_SVC;
+    
+    if (this.editID != 0) {
+      this.notificationService.openSuccessMessageNotification("Please save previous edited record");
+      return;
+    }
+
+    let shipmentDetails = shipmentDetailToUpdate;
+    console.log(shipmentDetails);
+    this.editID = shipmentDetailToUpdate.id;
+    console.log(this.editID);
+    //const dialogRef = this.dialog.open(AddressEditModelComponent, {
+    //  data: {
+    //    Id: shipmentDetailToUpdate.id,
+    //    rcV_ADR_TE: shipmentDetailToUpdate.rcV_ADR_TE,
+    //    shP_ADR_TR_TE: shipmentDetailToUpdate.shP_ADR_TR_TE,
+    //    coD_TE: shipmentDetailToUpdate.coD_TE,
+    //    pkG_NR_TE: shipmentDetailToUpdate.pkG_NR_TE,
+    //    rcV_CPY_TE: shipmentDetailToUpdate.rcV_CPY_TE,
+    //    poD_RTN_SVC: shipmentDetailToUpdate.poD_RTN_SVC,
+    //    is__ADR_TR_TE_Required: ((shipmentDetailToUpdate.smT_STA_NR === 0) ? false : true)
+    //  }
+    //});
+
+   
+
+
+    //dialogRef.afterClosed().subscribe(result => {
+    //  if (result === 1) {
+    //    let updatedDetails = this.dataService.getDialogData();
+    //    console.log(updatedDetails);
+    //    if (updatedDetails.coD_TE == shipmentDetailToUpdate.coD_TE
+    //      && updatedDetails.shP_ADR_TR_TE.toLowerCase() == shipmentDetailToUpdate.shP_ADR_TR_TE.toLowerCase()
+    //      && updatedDetails.poD_RTN_SVC == shipmentDetailToUpdate.poD_RTN_SVC) {
+
+    //      this.notificationService.openSuccessMessageNotification("No changes found to update");
+    //      return;
+    //    }
+
+    //    const details = {
+    //      SHP_ADR_TR_TE: updatedDetails.shP_ADR_TR_TE.trim(),
+    //      COD_TE: updatedDetails.coD_TE,
+    //      WFL_ID: shipmentDetails.wfL_ID,
+    //      ID: shipmentDetails.id,
+    //      POD_RTN_SVC: updatedDetails.poD_RTN_SVC,
+    //      RCV_ADR_TE: shipmentDetails.rcV_ADR_TE
+    //    }
+
+    //    this.shippingService.UpdateShippingAddress(details).subscribe((response: any) => {
+    //      console.log(response)
+    //      //shipmentDetailToUpdate.shP_ADR_TR_TE = response.shipmentDataRequest.shP_ADR_TR_TE;
+    //      //shipmentDetailToUpdate.coD_TE = response.shipmentDataRequest.coD_TE;
+    //      //shipmentDetailToUpdate.smT_STA_NR = response.shipmentDataRequest.smT_STA_NR;
+    //      //shipmentDetailToUpdate.smT_STA_TE = response.shipmentDataRequest.smT_STA_TE;
+    //      //shipmentDetailToUpdate.poD_RTN_SVC = response.shipmentDataRequest.poD_RTN_SVC;
+    //      this.getTranslateData(this.WorkflowID);
+    //      this.notificationService.openSuccessMessageNotification("Data Updated Successfully.");
+    //    },
+    //      error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText))
+    //  }
+    //});
   }
 
   rowTranslate(i, shipmentWorkFlowRequest) {

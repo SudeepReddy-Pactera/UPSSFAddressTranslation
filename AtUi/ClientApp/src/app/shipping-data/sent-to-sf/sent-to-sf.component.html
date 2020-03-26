@@ -46,12 +46,15 @@
       <ng-container matColumnDef="actions" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell"> Action </mat-header-cell>
         <mat-cell *matCellDef="let row; let i=index;" class="cell">
-          <button mat-icon-button (click)="startEdit(i,row)">
+          <button mat-icon-button (click)="startEdit(i,row)" *ngIf="row.id!=editID">
             <span><i class="material-icons">edit</i></span>
           </button>
+          <button mat-icon-button (click)="saveEdit(row)" *ngIf="row.id===editID">
+            <span><i class="material-icons">save</i></span>
+          </button>
           <!--<button mat-icon-button (click)="rowDelete(i,row)">
-        <span><i class="material-icons">delete_forever</i></span>
-      </button>-->
+    <span><i class="material-icons">delete_forever</i></span>
+  </button>-->
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="wfL_ID" class="container">
@@ -84,7 +87,12 @@
       </ng-container>
       <ng-container matColumnDef="shP_ADR_TR_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{element.shP_ADR_TR_TE}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <input [(ngModel)]="element.shP_ADR_TR_TE" *ngIf="element.id===editID" style="width:250px">
+          <div *ngIf="element.id!=editID">
+            {{element.shP_ADR_TR_TE}}
+          </div>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="shP_CTC_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> SHP Contact </mat-header-cell>
@@ -124,7 +132,12 @@
       </ng-container>
       <ng-container matColumnDef="coD_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> COD </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{element.coD_TE}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <input [(ngModel)]="element.coD_TE" *ngIf="element.id===editID" style="max-width:100px">
+          <div *ngIf="element.id!=editID">
+            {{element.coD_TE}}
+          </div>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="pyM_MTD" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Payment Method </mat-header-cell>
@@ -148,7 +161,16 @@
       </ng-container>
       <ng-container matColumnDef="poD_RTN_SVC" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Extra Service </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="cell"> {{PODoptions[element?.poD_RTN_SVC!=null ?element.poD_RTN_SVC:0].value}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="cell">
+          <mat-select [(ngModel)]="element.poD_RTN_SVC" name="poD_RTN_SVC" *ngIf="element.id===editID">
+            <mat-option *ngFor="let option of PODoptions" value="{{option.key}}">
+              {{option.value}}
+            </mat-option>
+          </mat-select>
+          <div *ngIf="element.id!=editID">
+            {{PODoptions[element?.poD_RTN_SVC!=null ?element.poD_RTN_SVC:0].value}}
+          </div>
+        </mat-cell>
       </ng-container>
       <ng-container hidden matColumnDef="spC_CST_ID_TE" class="container">
         <mat-header-cell hidden *matHeaderCellDef class="header-cell" mat-sort-header> Customer ID </mat-header-cell>

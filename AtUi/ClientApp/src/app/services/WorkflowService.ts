@@ -20,7 +20,6 @@ export class WorkflowService {
   }
 
   UploadFile(fileToUpload: File): Observable<Object> {
-    debugger;
     const endpoint = 'api/Shipment/ExcelFileUpload/';
     let  formData: FormData = new FormData();
 
