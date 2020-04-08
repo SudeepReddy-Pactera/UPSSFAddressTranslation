@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /UPS.ApiService/www
+/UPS.ApiService/.config/dotnet-tools.json
