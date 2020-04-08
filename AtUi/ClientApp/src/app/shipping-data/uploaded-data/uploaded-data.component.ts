@@ -21,7 +21,7 @@ export class UploadedDataComponent implements OnInit {
 
   displayedColumns =
     ['select', 'wfL_ID', 'smT_STA_NR', 'smT_NR_TE', 'rcV_CPY_TE', 'rcV_ADR_TE', 'shP_ADR_TR_TE', 'dsT_CTY_TE', 'dsT_PSL_TE',
-      'csG_CTC_TE', 'pH_NR', 'fsT_INV_LN_DES_TE',
+      'csG_CTC_TE', 'pH_NR','adR_SRC', 'fsT_INV_LN_DES_TE',
       'shP_CPY_NA', 'shP_ADR_TE', 'shP_CTC_TE', 'shP_PH_TE', 'orG_CTY_TE', 'orG_PSL_CD', 'imP_SLC_TE',
       'coD_TE', 'poD_RTN_SVC'
     ];
@@ -208,6 +208,7 @@ export class UploadedDataComponent implements OnInit {
             'Receiving Postal Code': data.dsT_PSL_TE,
             'Consignee Contact': data.csG_CTC_TE,
             'Consignee Phone': data.pH_NR,
+            'Address Source': data.adR_SRC,
             'Specification': data.fsT_INV_LN_DES_TE,
             'SHP Company Name': data.shP_CPY_NA,
             'SHP Address': data.shP_ADR_TE,

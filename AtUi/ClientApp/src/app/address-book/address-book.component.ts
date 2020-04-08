@@ -22,7 +22,7 @@ export class AddressBookComponent implements OnInit {
 
   displayedColumns =
     ['actions', 'consigneeCompany', 'consigneeAddress', 'consigneeTranslatedAddress', 'city', 'postalCode', 'translationScore',
-      'confidence', 'accuracy', 'createdDate', 'modifiedDate', 'organization', 'batchId', 'statusCode', 'address_One', 'address_Two',
+      'confidence', 'accuracy', 'createdDate', 'modifiedDate', 'addressStatus', 'organization', 'batchId', 'statusCode', 'address_One', 'address_Two',
       'address_Three', 'address_Four', 'road', 'region', 'country', 'addressTypeFlag', 'longitude',
       'latitude', 'geoCode', 'geoCodeError', 'buldingNumber', 'buildingName', 'unit', 'area',
       'semanticCheck', 'verifyMatch'];
@@ -107,6 +107,7 @@ export class AddressBookComponent implements OnInit {
             if (response.success === true) {
               addressBookDetails.consigneeTranslatedAddress = response.addressBookData.consigneeTranslatedAddress;
               addressBookDetails.modifiedDate = response.addressBookData.modifiedDate;
+              addressBookDetails.addressStatus = response.addressBookData.addressStatus;
               this.notificationService.openSuccessMessageNotification("Data Updated Successfully.");
             } else {
               this.notificationService.openErrorMessageNotification(response.operatonExceptionMessage);

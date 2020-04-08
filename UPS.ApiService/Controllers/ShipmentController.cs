@@ -120,10 +120,12 @@
                                     filePath,   
                                     configuration.GetSection("ExcelFileValidation:mandatoryFields").GetChildren().Select(val => val.Value).ToArray(),
                                     configuration.GetSection("ColumnValidation:regexList").GetChildren().Select(val => val.Value).ToArray(),
-                                    configuration.GetSection("ColumnValidation:columnLengths").GetChildren().Select(val => val.Value).ToArray());
+                                    configuration.GetSection("ColumnValidation:columnLengths").GetChildren().Select(val => val.Value).ToArray(),
+                                    configuration.GetSection("ColumnValidation:mandatoryColumnIndex").GetChildren().Select(val => val.Value).ToArray());
                             if (excelExtensionReponse.success)
                             {
                                 var excelDataObject2 = JsonConvert.DeserializeObject<List<ExcelDataObject>>(excelExtensionReponse.ExcelExtensionReponseData);
+                                var excelFailedDataObject = JsonConvert.DeserializeObject<List<ExcelData>>(excelExtensionReponse.ExcelFailureData);
                                 WorkflowController workflowController = new WorkflowController(this._hostingEnvironment, this._context, this._addressBookService, this._entityValidationService);
                                 WorkflowDataResponse response = ((WorkflowDataResponse)((ObjectResult)(workflowController.CreateWorkflow(file, userId)).Result).Value);
                                 _workflowID = response.Workflow.ID;
@@ -132,6 +134,7 @@
                                 {
                                     shipmentDataResponse.Success = true;
                                     shipmentDataResponse.Shipments = result.Shipments;
+                                    shipmentDataResponse.ExcelFailedData = excelFailedDataObject;
                                     WorkflowDataRequest workflowDataRequest = new WorkflowDataRequest();
                                     workflowDataRequest.ID = _workflowID;
                                     workflowDataRequest.WFL_STA_TE = workflowStatus;
@@ -747,7 +750,7 @@
             shipmentDataRequest.ACY_TE = geocode.accuracy;
             shipmentDataRequest.CON_NR = geocode.confidence;
             shipmentDataRequest.TranslationScore = geocode.translation_score;
-
+            shipmentDataRequest.ADR_SRC = Constants.AdrSrc.Quincus.ToString();
             if (
                         !string.IsNullOrEmpty(geocode.translated_adddress)
 

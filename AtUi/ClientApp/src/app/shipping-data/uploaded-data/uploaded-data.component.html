@@ -81,6 +81,10 @@
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address </mat-header-cell>
         <mat-cell *matCellDef="let element" class="cell"> {{element.shP_ADR_TR_TE}} </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="adR_SRC" class="container">
+        <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Address Source </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell"> {{element.adR_SRC}} </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="shP_CTC_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> SHP Contact </mat-header-cell>
         <mat-cell *matCellDef="let element" class="cell"> {{element.shP_CTC_TE}} </mat-cell>

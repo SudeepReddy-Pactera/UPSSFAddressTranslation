@@ -36,6 +36,7 @@ import {
   MatSortModule,
   MatStepperModule,
   MatTableModule,
+  MatTableDataSource,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,

@@ -43,9 +43,9 @@
       <mat-cell *matCellDef="let element" class="cell"> {{element.consigneeAddressId}} </mat-cell>
     </ng-container>
     <!--<ng-container matColumnDef="consigneeCompany" class="container">
-      <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Consignee Company </mat-header-cell>
-      <mat-cell *matCellDef="let element" class="cell"> {{element.consigneeCompany}} </mat-cell>
-    </ng-container>-->
+    <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Consignee Company </mat-header-cell>
+    <mat-cell *matCellDef="let element" class="cell"> {{element.consigneeCompany}} </mat-cell>
+  </ng-container>-->
     <ng-container matColumnDef="consigneeAddress" class="container">
       <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Consignee Address </mat-header-cell>
       <mat-cell *matCellDef="let element" class="cell"> {{element.consigneeAddress}} </mat-cell>
@@ -158,6 +158,10 @@
     <ng-container matColumnDef="modifiedDate" class="container">
       <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Modified Date </mat-header-cell>
       <mat-cell *matCellDef="let element" class="cell"> {{element.modifiedDate | date: 'MMMM dd, yyyy hh:mm a'}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="addressStatus" class="container">
+      <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Address Status </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="cell"> {{element.addressStatus}} </mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>

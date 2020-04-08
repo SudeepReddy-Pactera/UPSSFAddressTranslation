@@ -99,7 +99,8 @@
                             s.SVL_NR,
                             s.WGT_UNT_TE,
                             s.POD_RTN_SVC,
-                            s.TranslationScore
+                            s.TranslationScore,
+                            s.ADR_SRC
                         }).ToList();
 
                 foreach (var shipmentData in anonymousList)
@@ -175,6 +176,7 @@
                     shipmentDataRequest.SPC_SLIC_NR = shipmentData.SPC_SLIC_NR;
                     shipmentDataRequest.POD_RTN_SVC = shipmentData.POD_RTN_SVC;
                     shipmentDataRequest.TranslationScore = shipmentData.TranslationScore;
+                    shipmentDataRequest.ADR_SRC = shipmentData.ADR_SRC==null ?  null: shipmentData.ADR_SRC;
 
                     shipmentDataRequests.Add(shipmentDataRequest);
                 }
@@ -248,7 +250,8 @@
                             s.SVL_NR,
                             s.WGT_UNT_TE,
                             s.POD_RTN_SVC,
-                            s.TranslationScore
+                            s.TranslationScore,
+                            s.ADR_SRC
                         }).ToList();
 
                 foreach (var shipmentData in anonymousList)
@@ -324,6 +327,7 @@
                     shipmentDataRequest.SPC_SLIC_NR = shipmentData.SPC_SLIC_NR;
                     shipmentDataRequest.POD_RTN_SVC = shipmentData.POD_RTN_SVC;
                     shipmentDataRequest.TranslationScore = shipmentData.TranslationScore;
+                    shipmentDataRequest.ADR_SRC = shipmentData.ADR_SRC == null ? null : shipmentData.ADR_SRC;
 
                     shipmentDataRequests.Add(shipmentDataRequest);
                 }
@@ -533,13 +537,13 @@
                             this.context.BulkUpdate(matchedShipments);
                         }
 
-
                         List<AddressBook> addressBookElements = this.context.AddressBooks.Where(s => s.ConsigneeAddress == shipmentDataRequest.RCV_ADR_TE).ToList();
 
                         if (addressBookElements.Any())
                         {
                             addressBookElements.FirstOrDefault().ConsigneeTranslatedAddress = data.SHP_ADR_TR_TE;
                             addressBookElements.FirstOrDefault().ModifiedDate = DateTime.Parse(DateTime.Now.ToString()).ToLocalTime();
+                            addressBookElements.FirstOrDefault().AddressStatus = Constants.AdrStatus.Curated.ToString();
 
                             this.context.BulkUpdate(addressBookElements);
                         }
@@ -782,6 +786,7 @@
                             if (translatedAddress != null)
                             {
                                 shipmentDataRequest.SHP_ADR_TR_TE = translatedAddress.ConsigneeTranslatedAddress;
+                                shipmentDataRequest.ADR_SRC = Constants.AdrSrc.AdrBook.ToString();
                                 shipmentDataRequest.SMT_STA_NR = (int)Enums.ATStatus.Translated;
                                 wfStatus = shipmentDataRequest.SMT_STA_NR;
                                 shipmentDataRequest.SMT_STA_TE = Convert.ToString(Enums.ATStatus.Translated);

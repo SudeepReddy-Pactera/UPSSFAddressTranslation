@@ -10,6 +10,7 @@ import { List } from 'linq-typescript';
 import { Constants } from '../shared/Constants';
 import { NotificationService } from '../services/NotificationService';
 import { WorkflowService } from '../services/WorkflowService';
+import { ExcelService } from '../services/ExcelExport';
 
 @Component({
   selector: 'workflow',
@@ -25,6 +26,7 @@ export class WorkflowComponent {
   displayedColumns = ['id', 'usR_FST_NA', 'flE_NA', 'wfL_STA_TE_TEXT', 'crD_DT'];
   dataSource = new MatTableDataSource<Element>();
   filterText: string;
+  public excelMainData: any[] = [];
 
   fileNameControl = new FormControl('');
   isValidFile: boolean = true;
@@ -37,7 +39,8 @@ export class WorkflowComponent {
     private _loaderService: LoaderService,
     private snackBar: MatSnackBar,
       private notificationService: NotificationService,
-      private workflowService: WorkflowService
+    private workflowService: WorkflowService,
+    private excelService: ExcelService
   ) {
 
   }
@@ -109,7 +112,8 @@ export class WorkflowComponent {
         .subscribe((response: any) => {
           if (response.success === true) {
             this.getWorkflowDetails();
-            this.notificationService.openSuccessMessageNotification("File Uploaded successfully");
+            this.exportFailedExcelData(response.excelFailedData, fileName);
+            this.notificationService.openSuccessMessageNotification("File Uploaded successfully ," + response.shipments.length + " rows inserted and " + response.excelFailedData.length+" rows rejected");
             this.resetFileUpload();
           } else if (response.success === false) {
             if (response.exception) {
@@ -141,6 +145,55 @@ export class WorkflowComponent {
   resetFileUpload() {
     this.fileNameControl.setValue('');
     (<HTMLInputElement>document.getElementById('file')).value = '';
+  }
+
+  exportFailedExcelData(failedExcelData: any,filename:string) {
+    this.excelMainData = [];
+    filename = filename + "-ErrorData";
+    if (failedExcelData.length > 0) {
+      for (let data of failedExcelData) {
+        this.excelMainData.push(
+          {
+            'shipment no': data.s_shipmentno,
+            'pcs': Math.floor(data.pcs),
+            'package no': data.s_packageno,
+            'pkg wei.': data.s_pkgwei,
+            'shpt wei.': data.s_shptwei,
+            'dim. wei.': data.s_dimwei,
+            'wei. unit': data.s_dimwei,
+            'svl': Math.floor(data.svl),
+            'pymt': data.pymt,
+            'ship date': data.s_shipdate,
+            'pkup time': data.s_pkuptime,
+            'bill type': data.s_billtype,
+            'value': Math.floor(data.value),
+            'currency': data.currency,
+            '1st invoice line desc.': data.s_1stinvoicelinedesc,
+            'exp slic': data.s_expslic,
+            'shpr#': data.s_shpr,
+            'shipper company': data.s_shippercompany,
+            'address': data.address,
+            'org city': data.s_orgcity,
+            'org psl': data.s_orgpsl,
+            ' shpt ctc': data.s_shptctc,
+            'shpt ph#': data.s_shptph,
+            'imp slic': data.s_impslic,
+            'impr#': data.s_impr,
+            'receiver company': data.s_receivercompany,
+            'address1': data.s_address1,
+            'dst city': data.s_dstcity,
+            'dst psl': data.s_dstpsl,
+            'cnee ctc': data.s_cneectc,
+            'ph#': Math.floor(data.s_ph),
+            'in flight': data.s_inflight,
+            'out flight': data.s_outflight,
+            'error message': data.s_ExceptionMessage,
+
+          })
+      }
+      this.excelService.exportAsErrorExcelFile(this.excelMainData, filename);
+    }
+
   }
  
 }

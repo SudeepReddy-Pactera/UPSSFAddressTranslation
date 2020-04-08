@@ -27,6 +27,8 @@ namespace ExcelFileRead
     {
         public string ExcelExtensionReponseData { get; set; }
 
+        public string ExcelFailureData { get; set; }
+
         public bool success { get; set; }
 
         public Exception exception { get; set; }
@@ -61,11 +63,12 @@ namespace ExcelFileRead
         
 
 
-        public ExcelExtensionReponse Test(string fileName, string[] validationSet, string[] regexSet, string[] columnLengths)
+        public ExcelExtensionReponse Test(string fileName, string[] validationSet, string[] regexSet, string[] columnLengths, string[] mandatoryColun)
         {
             ExcelExtensionReponse excelExtensionReponse = new ExcelExtensionReponse();
-
+            List<int> colIndex = mandatoryColun.Select(int.Parse).ToList();
             string JSONString = string.Empty;
+            string DataJSONString = string.Empty;
             IExcelDataReader excelReader;
             try
             {
@@ -90,14 +93,124 @@ namespace ExcelFileRead
                     }
                 });
 
+
+                System.Data.DataTable successtable = result.Tables[0].Clone();
+                System.Data.DataTable failuretable = result.Tables[0].Clone();
+                successtable.Clear();
+                failuretable.Clear();
+                failuretable.Columns.Add("Exception_Message", typeof(string));
+
+
                 excelReader.Close();
                 List<string> getValidationErrors;
                 bool getDesiredColumnExistence = ColExistence(result, validationSet, out getValidationErrors);
 
                 if (getDesiredColumnExistence)
                 {
+                    
+                   
 
-                    for(int i=0;i < result.Tables[0].Columns.Count;i++)
+                    foreach (DataRow row in result.Tables[0].Rows)
+                    {
+                        List<bool> errcol = new List<bool>();
+
+                        for (int i=0;i < result.Tables[0].Columns.Count; i++)
+                        {
+                            var test = colIndex.Contains(i);
+                            var regex = new Regex(regexSet[i]);
+                            bool temp = true;
+                            if (row.ItemArray[i].ToString().Length>0)
+                            {
+                                if (!regex.IsMatch(row.ItemArray[i].ToString()))
+                                {
+                                    temp = false;
+                                    
+                                }
+                                else if(row.ItemArray[i].ToString().Length > Int32.Parse(columnLengths[i]))
+                                {
+                                    temp = false;
+                                    
+                                }
+
+                            }
+                            else if (colIndex.Contains(i))
+                            {
+                                if (row.ItemArray[i].ToString().Length == 0)
+                                {
+                                    temp = false;
+                                }
+                            }
+
+                            if (i == 30 )
+                            {
+                                if (row.ItemArray[i].ToString() == "0")
+                                {
+                                    temp = false;
+                                }
+                            }
+                            errcol.Add(temp);
+                        }
+
+
+                        if (errcol.Contains(false))
+                        {
+                            failuretable.ImportRow(row);
+                            string excepMsg=null;
+                            for(int j=0;j < errcol.Count; j++)
+                            {
+                                if (errcol[j]==false)
+                                {
+                                    excepMsg = excepMsg==null ? failuretable.Columns[j].ColumnName.ToString():
+                                        failuretable.Columns[j].ColumnName.ToString()+"," + excepMsg;
+                                }
+                            }
+                            excepMsg = excepMsg + " has invalid data";
+
+                            //row["Exception_Message"] = excepMsg;
+                            //failuretable.Rows[failuretable.Rows.Count-1].ItemArray[33] = excepMsg
+                            
+                            failuretable.Rows[failuretable.Rows.Count - 1][33] = excepMsg;
+
+
+                        }
+                        else
+                        {
+                            successtable.ImportRow(row);
+                        }
+
+                    }
+                    System.Data.DataTable originalData = new System.Data.DataTable();
+                    originalData = result.Tables[0];
+                    var tableName = result.Tables[0].TableName;
+                    result.Tables.Remove(tableName);
+
+                    result.Tables.Add(successtable);
+
+                    var regexItem2 = new Regex("[^0-9a-zA-Z]+");
+
+                    for (int i = 0; i < failuretable.Columns.Count; i++)
+                    {
+
+                        if (regexItem2.IsMatch(failuretable.Columns[i].ColumnName.ToString()))
+                        {
+                            failuretable.Columns[i].ColumnName = "s_" + Regex.Replace(failuretable.Columns[i].ColumnName, @"[^0-9a-zA-Z]+", "");
+                        }
+                    }
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+                    for (int i=0;i < result.Tables[0].Columns.Count;i++)
                     {
                       bool regexStatus = regexValdiation(result.Tables[0].DefaultView.ToTable(false, result.Tables[0].Columns[i].ColumnName), regexSet[i], Int32.Parse(columnLengths[i]));
 
@@ -108,13 +221,13 @@ namespace ExcelFileRead
                     }
 
 
-                    foreach (string dataColumn in validationSet)
-                    {
-                        if (DataExtensions.HasNull(result.Tables[0].DefaultView.ToTable(true, dataColumn)))
-                        {
-                            throw new Exception("'"+dataColumn + "' column has identified invalid data");
-                        }
-                    }
+                    //foreach (string dataColumn in validationSet)
+                    //{
+                    //    if (DataExtensions.HasNull(result.Tables[0].DefaultView.ToTable(true, dataColumn)))
+                    //    {
+                    //        throw new Exception("'"+dataColumn + "' column has identified invalid data");
+                    //    }
+                    //}
 
                     var regexItem = new Regex("[^0-9a-zA-Z]+");
 
@@ -129,7 +242,9 @@ namespace ExcelFileRead
 
                     result.AcceptChanges();
                     JSONString = JsonConvert.SerializeObject(result.Tables[0]);
+                    DataJSONString= JsonConvert.SerializeObject(failuretable);
                     excelExtensionReponse.ExcelExtensionReponseData = JSONString;
+                    excelExtensionReponse.ExcelFailureData = DataJSONString;
                     excelExtensionReponse.success = true;
                 }
                 else

@@ -8,6 +8,17 @@
             public const string User = "OperationUser";
         }
 
+        public static class AdrSrc
+        {
+            public const string AdrBook = "Address Book";
+            public const string Quincus = "Quincus";
+        }
+
+        public static class AdrStatus
+        {
+            public const string Curated = "Curated";
+            public const string Quincus = "Quincus";
+        }
     }
 
     

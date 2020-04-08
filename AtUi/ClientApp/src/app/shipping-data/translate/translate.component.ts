@@ -22,9 +22,9 @@ import { ExcelService } from '../../services/ExcelExport';
 
 export class TranslateComponent implements OnInit {
   displayedColumns =
-    ['select', 'actions', 'pkG_NR_TE', 'rcV_CPY_TE', 'rcV_ADR_TE', 'shP_ADR_TR_TE', 'csG_CTC_TE', 'pH_NR', 'coD_TE', 'translation_score', 'coN_NR', 'acY_TE',
-      'dsT_CTY_TE', 'dsT_PSL_TE', 'fsT_INV_LN_DES_TE', 'shP_CPY_NA', 'shP_ADR_TE', 'shP_CTC_TE', 'shP_PH_TE',
-      'orG_CTY_TE', 'orG_PSL_CD', 'imP_SLC_TE', 'poD_RTN_SVC', 'wfL_ID', 'smT_STA_NR'
+    ['select', 'actions', 'pkG_NR_TE', 'rcV_CPY_TE', 'rcV_ADR_TE', 'shP_ADR_TR_TE', 'csG_CTC_TE', 'pH_NR', 'adR_SRC', 'coD_TE', 'poD_RTN_SVC',
+      'translation_score', 'coN_NR', 'acY_TE','dsT_CTY_TE', 'dsT_PSL_TE', 'fsT_INV_LN_DES_TE', 'shP_CPY_NA', 'shP_ADR_TE', 'shP_CTC_TE', 'shP_PH_TE',
+      'orG_CTY_TE', 'orG_PSL_CD', 'imP_SLC_TE', 'wfL_ID', 'smT_STA_NR'
     ];
   private eventsSubscription: any
 
@@ -61,10 +61,10 @@ export class TranslateComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  //ngAfterViewInit() {
+  //  this.dataSource.paginator = this.paginator;
+  //  this.dataSource.sort = this.sort;
+  //}
 
   ngOnInit() {
     this.WorkflowID = this.activatedRoute.snapshot.params.WorkflowID;
@@ -369,6 +369,7 @@ export class TranslateComponent implements OnInit {
             'Receiving Postal Code': data.dsT_PSL_TE,
             'Consignee Contact': data.csG_CTC_TE,
             'Consignee Phone': data.pH_NR,
+            'Address Source': data.adR_SRC,
             'Specification': data.fsT_INV_LN_DES_TE,
             'SHP Company Name': data.shP_CPY_NA,
             'SHP Address': data.shP_ADR_TE,

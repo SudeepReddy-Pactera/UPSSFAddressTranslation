@@ -33,4 +33,5 @@ export class AddressBookData
   statusCode: string;
   unit: string;
   verifyMatch: string;
+  addressStatus: string;
 }

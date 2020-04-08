@@ -141,5 +141,8 @@ namespace UPS.DataObjects.Shipment
         [Column("TR-SCR-NR")]
         [StringLength(50)]
         public string TranslationScore { get; set; }
+        [Column("ADR-SRC")]
+        [StringLength(20)]
+        public string ADR_SRC { get; set; }
     }
 }

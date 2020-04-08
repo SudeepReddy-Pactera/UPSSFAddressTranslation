@@ -40,7 +40,7 @@
 
 mat-table {
   width: 100%;
-  min-width: 4200px;
+  min-width: 4500px;
   padding: 0;
 }
 
@@ -87,6 +87,9 @@ mat-cell:nth-child(1) {
   flex: none;
   float: left;
   font-size: 12px;
+  position: sticky;
+  left: 0;
+  background-color: inherit;
 }
 
 /*Select*/
@@ -97,6 +100,9 @@ mat-header-cell:nth-child(1) {
   flex: none;
   font-size: 14px;
   font-weight: bold;
+  position: sticky;
+  left: 0;
+  background-color: inherit;
 }
 /*Edit*/
 mat-cell:nth-child(2) {
@@ -105,6 +111,11 @@ mat-cell:nth-child(2) {
   flex: none;
   float: left;
   font-size: 12px;
+  position: sticky;
+  left: 50px;
+  z-index: 9;
+  background-color: inherit;
+
 }
 
 /*Edit*/
@@ -114,11 +125,18 @@ mat-header-cell:nth-child(2) {
   flex: none;
   font-size: 14px;
   font-weight: bold;
+  position: sticky;
+  left: 50px;
+  z-index: 9;
+  background-color: inherit ;
+  align-self: stretch;
+  display: flex;
+  align-items: center
 }
 /*package Number*/
 mat-cell:nth-child(3) {
-  padding: 0px 5px 0px 5px;
-  width: 160px;
+  padding: 0px 5px 0px 15px;
+  width: 170px;
   flex: none;
   float: left;
   font-size: 12px;
@@ -126,8 +144,8 @@ mat-cell:nth-child(3) {
 
 /*package Number*/
 mat-header-cell:nth-child(3) {
-  padding: 0px 5px 0px 5px;
-  width: 160px;
+  padding: 0px 5px 0px 15px;
+  width: 170px;
   flex: none;
   font-size: 14px;
   font-weight: bold;
@@ -190,7 +208,7 @@ mat-header-cell:nth-child(15) {
 /*Receiving Company*/
 mat-cell:nth-child(4) {
   padding: 0px 5px 0px 5px;
-  width: 140px;
+  width: 200px;
   flex: none;
   float: left;
   font-size: 12px;
@@ -199,7 +217,7 @@ mat-cell:nth-child(4) {
 /*Receiving Company*/
 mat-header-cell:nth-child(4) {
   padding: 0px 5px 0px 5px;
-  width: 140px;
+  width: 200px;
   flex: none;
   font-size: 14px;
   font-weight: bold;
@@ -241,10 +259,30 @@ mat-header-cell:nth-child(6) {
   font-weight: bold;
 }
 
+
+/*SHP Address*/
+mat-cell:nth-child(14) {
+  padding: 0px 5px 0px 5px;
+  width: 310px;
+  flex: none;
+  float: left;
+  font-size: 12px;
+}
+
+/*SHP Address*/
+mat-header-cell:nth-child(14) {
+  padding: 0px 5px 0px 5px;
+  width: 310px;
+  flex: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
 /*Consignee Contact*/
 mat-cell:nth-child(7) {
   padding: 0px 5px 0px 5px;
-  width: 100px;
+  width: 150px;
   flex: none;
   float: left;
   font-size: 12px;
@@ -253,7 +291,7 @@ mat-cell:nth-child(7) {
 /*Consignee Contact*/
 mat-header-cell:nth-child(7) {
   padding: 0px 5px 0px 5px;
-  width: 100px;
+  width: 150px;
   flex: none;
   font-size: 14px;
   font-weight: bold;
@@ -277,8 +315,31 @@ mat-header-cell:nth-child(8) {
   font-weight: bold;
 }
 
+
+/*Specification*/
+mat-cell:nth-child(13) {
+  padding: 0px 5px 0px 5px;
+  width: 250px;
+  flex: none;
+  float: left;
+  font-size: 12px;
+}
+
+/*Specification*/
+mat-header-cell:nth-child(13) {
+  padding: 0px 5px 0px 5px;
+  width: 250px;
+  flex: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+
 mat-row:nth-child(odd) {
   background: #F2F2F2;
+}
+
+mat-row:nth-child(even) {
+  background: #FFFFFF;
 }
 
 mat-header-row {

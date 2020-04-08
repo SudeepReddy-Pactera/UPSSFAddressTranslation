@@ -12,5 +12,6 @@ namespace UPS.DataObjects.Shipment
         public string OperationExceptionMsg { get; set; }
         public string BeforeAddress { get; set; }
         public bool HasWorkflow { get; set; }
+        public List<ExcelData> ExcelFailedData { get; set; }
     }
 }
