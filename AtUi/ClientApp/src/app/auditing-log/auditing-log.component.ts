@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { AuditingLogService } from '../services/AuditingLogService';
 import { DialogService } from '../services/dialog.service';
 import { DatePipe } from '@angular/common'
+import { ExcelService } from '../services/ExcelExport';
 
 @Component({
   selector: 'app-auditing-log',
@@ -27,9 +28,11 @@ export class AuditingLogComponent implements OnInit {
   public errorMessage: string;
   selection = new SelectionModel<any>(true, []);
   filterText: string = '';
+  public tableData: any[] = [];
+  public excelMainData: any[] = [];
 
   constructor(private shippingService: ShippingService, private activatedRoute: ActivatedRoute,
-    public dialog: MatDialog, public dataService: DataService,
+    public dialog: MatDialog, public dataService: DataService, private excelService: ExcelService,
     private auditingLogService: AuditingLogService, private dialogService: DialogService, private datepipe: DatePipe) {
   }
 
@@ -97,6 +100,33 @@ export class AuditingLogComponent implements OnInit {
     (<HTMLInputElement>document.getElementById('fromDate')).value = ' ';
     (<HTMLInputElement>document.getElementById('toDate')).value = ' ';
     this.dataSource.data = this.ResponseData;
+  }
+
+
+  exportToExcel() {
+    this.tableData = [];
+    this.excelMainData = [];
+    this.tableData = this.dataSource.sortData(this.dataSource.filteredData, this.dataSource.sort);
+    console.log(this.tableData);
+    if (this.tableData.length > 0) {
+      for (let data of this.tableData) {
+        this.excelMainData.push(
+          {
+            'Workflow ID': data.wfL_ID,
+            'Shipment ID': data.wfL_ID,
+            'Consignee Address': data.csG_ADR,
+            'Previous Address': data.bfR_ADR,
+            'Modified Address': data.afR_ADR,
+            'Updated By': data.upD_BY_TE,
+            'Updated Date': this.datepipe.transform(data.upD_DT, 'MMMM dd, yyyy hh:mm a'),
+            'Update From': data.upD_FRM,
+           
+          })
+      }
+      this.excelService.exportAsExcelFile(this.excelMainData, 'Audit Log');
+    } else {
+      this.dialogService.openAlertDialog('No data for export.');
+    }
   }
 
 }
