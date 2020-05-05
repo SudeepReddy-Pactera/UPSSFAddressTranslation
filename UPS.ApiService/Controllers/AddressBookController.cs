@@ -58,6 +58,8 @@ namespace AtService.Controllers
                     addressAuditLogRequest.UPD_FRM = "AddressBook";
                     addressAuditLogRequest.UPD_DT = DateTime.Now;
                     addressAuditLogRequest.WFL_ID = addressBookData.WFL_ID;
+                    addressAuditLogRequest.CSG_CTY = addressBookResponse.AddressBookData.City;
+                    addressAuditLogRequest.CSG_PSL_CD = addressBookResponse.AddressBookData.PostalCode;
                     AddressAuditLogResponse addressAuditLogResponse = this.addressAuditLogService.Insert(addressAuditLogRequest);
                     if (addressAuditLogResponse.Success)
                     {
@@ -67,7 +69,7 @@ namespace AtService.Controllers
                     {
                         // Log the error here
                     }
-
+                   
                 }
                 catch (Exception ex)
                 {

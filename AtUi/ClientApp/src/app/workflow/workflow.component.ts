@@ -184,7 +184,7 @@ export class WorkflowComponent {
             'dst city': data.s_dstcity,
             'dst psl': data.s_dstpsl,
             'cnee ctc': data.s_cneectc,
-            'ph#': Math.floor(data.s_ph),
+            'ph#': data.s_ph,
             'in flight': data.s_inflight,
             'out flight': data.s_outflight,
             'error message': data.s_ExceptionMessage,

@@ -235,6 +235,8 @@
                     addressAuditLogRequest.UPD_FRM = "Shipment";
                     addressAuditLogRequest.UPD_DT = DateTime.Parse(DateTime.Now.ToString()).ToLocalTime();
                     addressAuditLogRequest.WFL_ID = shipmentDataResponse.ShipmentDataRequest.WFL_ID;
+                    addressAuditLogRequest.CSG_CTY = shipmentDataResponse.ShipmentDataRequest.DST_CTY_TE;
+                    addressAuditLogRequest.CSG_PSL_CD = shipmentDataResponse.ShipmentDataRequest.DST_PSL_TE;
                     AddressAuditLogResponse addressAuditLogResponse = addressAuditLogService.Insert(addressAuditLogRequest);
                     if (addressAuditLogResponse.Success)
                     {

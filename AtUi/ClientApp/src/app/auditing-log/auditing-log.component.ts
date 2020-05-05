@@ -21,7 +21,7 @@ export class AuditingLogComponent implements OnInit {
 
 
   displayedColumns =
-    ['wfL_ID','smT_ID', 'csG_ADR', 'bfR_ADR', 'afR_ADR', 'upD_BY_TE', 'upD_DT', 'upD_FRM'];
+    ['wfL_ID', 'smT_ID', 'csG_ADR', 'bfR_ADR', 'afR_ADR', 'csG_CTY','csG_PSL_CD', 'upD_BY_TE', 'upD_DT', 'upD_FRM'];
 
   public ResponseData: any[] = [];
   dataSource = new MatTableDataSource<Element>();
@@ -58,6 +58,7 @@ export class AuditingLogComponent implements OnInit {
     this.auditingLogService.getAddressAuditLogData().subscribe((response: any) => {
       if (response) {
         this.ResponseData = response;
+        console.log(response);
         this.dataSource.data = this.ResponseData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -117,6 +118,8 @@ export class AuditingLogComponent implements OnInit {
             'Consignee Address': data.csG_ADR,
             'Previous Address': data.bfR_ADR,
             'Modified Address': data.afR_ADR,
+            'City': data.csG_CTY,
+            'Postal Code': data.csG_PSL_CD,
             'Updated By': data.upD_BY_TE,
             'Updated Date': this.datepipe.transform(data.upD_DT, 'MMMM dd, yyyy hh:mm a'),
             'Update From': data.upD_FRM,

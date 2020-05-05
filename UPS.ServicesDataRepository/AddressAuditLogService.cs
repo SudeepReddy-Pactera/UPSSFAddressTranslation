@@ -35,7 +35,9 @@ namespace UPS.ServicesDataRepository
                                       a.UPD_FRM,
                                       a.UPD_DT,
                                       UPD_BY_TE = us.FirstName + " " + us.LastName,
-                                      a.WFL_ID
+                                      a.WFL_ID,
+                                      a.CSG_CTY,
+                                      a.CSG_PSL_CD
                                   };
             foreach (var aaloglist in auditListByName)
             {
@@ -50,6 +52,9 @@ namespace UPS.ServicesDataRepository
                 addrauditlog.UPD_DT = aaloglist.UPD_DT;
                 addrauditlog.UPD_BY_TE = aaloglist.UPD_BY_TE;
                 addrauditlog.WFL_ID = aaloglist.WFL_ID;
+                addrauditlog.CSG_CTY = aaloglist.CSG_CTY;
+                addrauditlog.CSG_PSL_CD = aaloglist.CSG_PSL_CD;
+
                 addressAuditLogRequests.Add(addrauditlog);
             }
 

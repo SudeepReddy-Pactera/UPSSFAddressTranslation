@@ -58,6 +58,14 @@
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Modified Address </mat-header-cell>
         <mat-cell *matCellDef="let element" class="cell"> {{element.afR_ADR}} </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="csG_CTY" class="container">
+        <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> City </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell"> {{element.csG_CTY}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="csG_PSL_CD" class="container">
+        <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Postal Code </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell"> {{element.csG_PSL_CD}} </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="upD_BY_TE" class="container">
         <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Updated By </mat-header-cell>
         <mat-cell *matCellDef="let element" class="cell"> {{element.upD_BY_TE}} </mat-cell>

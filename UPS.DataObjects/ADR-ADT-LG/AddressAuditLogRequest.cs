@@ -31,5 +31,9 @@ namespace UPS.DataObjects.ADR_ADT_LG
         public string UPD_BY_TE { get; set; }
         [Column("WFL-ID")]
         public int? WFL_ID { get; set; }
+        [Column("CSG-CTY")]
+        public string CSG_CTY { get; set; }
+        [Column("CSG-PSL-CD")]
+        public string CSG_PSL_CD { get; set; }
     }
 }
