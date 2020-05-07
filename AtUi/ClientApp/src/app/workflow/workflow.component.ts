@@ -120,6 +120,10 @@ export class WorkflowComponent {
               this.notificationService.openErrorMessageNotification(response.exception.Message);
               this.resetFileUpload();
             }
+            else {
+              this.notificationService.openErrorMessageNotification('Low Bandwidth . Please re-upload file');
+              this.resetFileUpload();
+            }
           }
         },
         error =>

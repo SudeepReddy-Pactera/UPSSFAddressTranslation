@@ -146,6 +146,7 @@
                                     shipmentDataResponse.OperationExceptionMsg = result.OperationExceptionMsg;
                                     WorkflowService workflowService = new WorkflowService(_context,_addressBookService,_entityValidationService);
                                     workflowService.DeleteWorkflowById(_workflowID);
+                                    excelExtensionReponse.success = false;
                                 }
                             }
                             else
