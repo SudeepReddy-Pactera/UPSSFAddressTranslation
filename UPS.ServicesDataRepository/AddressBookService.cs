@@ -25,9 +25,16 @@ namespace UPS.ServicesDataRepository
 
         public List<AddressBook> GetAddressBooks()
         {
-            return this.context.AddressBooks
-                    .OrderBy(( AddressBook ab)=> ab.Id)
-                    .ToList();
+
+            int count = this.context.AddressBooks.Count();
+
+            List<AddressBook> AddressBook =
+                this.context.AddressBooks.AsNoTracking()
+                .OrderBy((AddressBook ab) => ab.Id)
+                .ToList();
+
+
+            return AddressBook;
         }
 
         public AddressBookResponse UpdateAddressBookById(AddressBook addressBookData)

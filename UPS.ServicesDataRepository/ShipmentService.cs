@@ -694,7 +694,7 @@
             catch (Exception exception)
             {
                 shipmentDataResponse.OperationExceptionMsg = exception.Message;
-                shipmentDataResponse.Success = true;
+                shipmentDataResponse.Success = false;
                 //AuditEventEntry.WriteEntry(new Exception(exception.Message));
             }
             return shipmentDataResponse;

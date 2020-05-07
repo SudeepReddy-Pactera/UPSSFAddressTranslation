@@ -74,7 +74,6 @@ export class LoginComponent {
 
         },
         error => {
-          debugger;
           if (error.status == 401)
           this.dialogService.openAlertDialog('Please provide valid credentials');
         }
