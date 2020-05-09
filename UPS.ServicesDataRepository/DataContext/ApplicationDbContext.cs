@@ -17,7 +17,7 @@ using UPS.ServicesDataRepository.OverrideDbContext;
 
 namespace UPS.ServicesDataRepository.DataContext
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>,IDisposable
     {
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

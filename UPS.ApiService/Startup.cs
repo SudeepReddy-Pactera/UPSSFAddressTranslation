@@ -41,6 +41,10 @@ namespace UPS.AddressTranslationService
             {
                 c.AddPolicy("AllowAtUIOrigin", options => options.WithOrigins(Configuration["CorsEnableDomain:Domain"]));
             });
+            services.AddDbContext<ApplicationDbContext>(
+    option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Transient);
+
+          
 
             services.ContextSetup(Configuration);
 
@@ -52,7 +56,6 @@ namespace UPS.AddressTranslationService
 
 
             services.AddTransient<IAddressAuditLogAsync, AddressAuditLogService>();
-            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IShipmentAsync, ShipmentService>();
             services.AddTransient<IShipperCompanyAsync, ShipperCompanyService>();
@@ -62,6 +65,8 @@ namespace UPS.AddressTranslationService
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IShipperCompanyAsync, ShipperCompanyService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Core API", Description = "Swagger Core API" });
@@ -71,9 +76,8 @@ namespace UPS.AddressTranslationService
              );
 
             services.AddElmah();
-            
-            services.AddDbContext<ApplicationDbContext>(
-                option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -94,7 +98,7 @@ namespace UPS.AddressTranslationService
 
             services.IocSetup();
 
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,7 +118,7 @@ namespace UPS.AddressTranslationService
                 app.UseHsts();
             }
             app.UseElmah();
-         
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

@@ -141,13 +141,7 @@ namespace ExcelFileRead
                                 }
                             }
 
-                            if (i == 30 )
-                            {
-                                if (row.ItemArray[i].ToString() == "0")
-                                {
-                                    temp = false;
-                                }
-                            }
+                            
                             errcol.Add(temp);
                         }
 

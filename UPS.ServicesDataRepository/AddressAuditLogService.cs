@@ -21,6 +21,7 @@ namespace UPS.ServicesDataRepository
         public List<AddressAuditLogRequest> GetAll()
         {
             List<AddressAuditLogRequest> addressAuditLogRequests = new List<AddressAuditLogRequest>();
+            var ad = context.AddressAuditLogRequests.ToList();
             var auditListByName = from a in context.AddressAuditLogRequests
                                   join us in context.UserData on (int?)a.UPD_BY equals us.ID
                                   orderby a.ID descending

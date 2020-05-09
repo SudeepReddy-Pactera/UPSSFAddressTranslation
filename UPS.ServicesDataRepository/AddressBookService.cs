@@ -25,6 +25,11 @@ namespace UPS.ServicesDataRepository
 
         public List<AddressBook> GetAddressBooks()
         {
+
+
+
+
+
             return this.context.AddressBooks
                     .OrderBy(( AddressBook ab)=> ab.Id)
                     .ToList();
@@ -41,7 +46,7 @@ namespace UPS.ServicesDataRepository
 
                 data.ConsigneeTranslatedAddress = addressBookData.ConsigneeTranslatedAddress;
                 data.ModifiedDate = DateTime.Now;
-                data.AddressStatus = Constants.AdrStatus.Curated;
+                //data.AddressStatus = Constants.AdrStatus.Curated;
 
                 this.context.AddressBooks.Update(data);
                 this.context.Entry(addressBookData).State = EntityState.Detached;
@@ -130,7 +135,7 @@ namespace UPS.ServicesDataRepository
                                  VerifyMatch = geocode?.verify_match,
                                  TranslationScore = geocode?.translation_score,
                                  ConsigneeCompany = shipmentDetails.ContainsKey(address.id) ? shipmentDetails[address.id] : string.Empty,
-                                 AddressStatus = Constants.AdrStatus.Quincus.ToString()
+                                 //AddressStatus = Constants.AdrStatus.Quincus.ToString()
                              }).ToList();
 
                         List<AddressBook> validEntity = this.entityValidationService.FilterValidEntity<AddressBook>(addressBooks);

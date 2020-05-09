@@ -543,7 +543,7 @@
                         {
                             addressBookElements.FirstOrDefault().ConsigneeTranslatedAddress = data.SHP_ADR_TR_TE;
                             addressBookElements.FirstOrDefault().ModifiedDate = DateTime.Parse(DateTime.Now.ToString()).ToLocalTime();
-                            addressBookElements.FirstOrDefault().AddressStatus = Constants.AdrStatus.Curated.ToString();
+                           // addressBookElements.FirstOrDefault().AddressStatus = Constants.AdrStatus.Curated.ToString();
 
                             this.context.BulkUpdate(addressBookElements);
                         }
