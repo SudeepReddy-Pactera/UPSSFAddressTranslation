@@ -10,6 +10,8 @@ using UPS.DataObjects.Common;
 using UPS.ServicesAsyncActions;
 using UPS.ServicesDataRepository.DataContext;
 using UPS.ServicesDataRepository.Common;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace UPS.ServicesDataRepository
 {
@@ -25,16 +27,57 @@ namespace UPS.ServicesDataRepository
 
         public List<AddressBook> GetAddressBooks()
         {
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    try
+            //    {
 
-            int count = this.context.AddressBooks.Count();
+            //        using (SqlConnection sqlConnection = new SqlConnection("Server=10.130.4.15;Initial Catalog=ATNEW;Persist Security Info=False;User ID=sa;Password=Pactera@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"))
+            //        {
+            //            SqlDataAdapter da = new SqlDataAdapter("select * from [ADR-BK] order by Id", sqlConnection);
 
-            List<AddressBook> AddressBook =
-                this.context.AddressBooks.AsNoTracking()
-                .OrderBy((AddressBook ab) => ab.Id)
-                .ToList();
+            //            DataSet ds = new DataSet();
+
+            //            da.Fill(ds);
+            //            i = 3;
+            //        }
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        if(ex.Message.Contains("A transport-level error has occurred"))
+            //        {
+            //            System.Threading.Thread.Sleep(4000);
+            //        }
+            //    }
+            //}
+
+            try
+            {
+                return context.AddressBooks
+                    .OrderBy((AddressBook ab) => ab.Id)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                System.Threading.Thread.Sleep(4000);
+            }
 
 
-            return AddressBook;
+
+            return this.context.AddressBooks
+                    .OrderBy((AddressBook ab) => ab.Id)
+                    .ToList();
+
+
+            //int count = this.context.AddressBooks.Count();
+
+            //List<AddressBook> AddressBook =
+            //    this.context.AddressBooks.AsNoTracking()
+            //    .OrderBy((AddressBook ab) => ab.Id)
+            //    .ToList();
+
+
+            //return AddressBook;
         }
 
         public AddressBookResponse UpdateAddressBookById(AddressBook addressBookData)
