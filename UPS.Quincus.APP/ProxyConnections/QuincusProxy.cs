@@ -94,6 +94,113 @@
             return quincusTokenDataResponse;
         }
 
+
+
+
+
+
+
+
+        public static SFTranslationAPIResponse GetSFTranslatedAddress(SFTranslationParams sfTranslationParams)
+        {
+            SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
+            var input = string.Empty;
+            try
+            {
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(sfTranslationParams.endpoint);
+                if (string.Equals(MapProxy.WebProxyEnable, true.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    WebProxy myProxy = new WebProxy(MapProxy.webProxyURI, false, null, new NetworkCredential(MapProxy.webProxyUsername, MapProxy.webProxyPassword));
+                    httpWebRequest.Proxy = myProxy;
+                }
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    input = "{\"address_en\":\"" + sfTranslationParams.address_en + "\"," +
+                                "\"appId\":\"" + sfTranslationParams.appId +  "\"," +
+                                "\"token\":\"" + sfTranslationParams.token + "\"," +
+                                "\"company\":\"" + sfTranslationParams.company + "\"," +
+                                "\"contacts\":\"" + sfTranslationParams.contacts + "\"," +
+                                "\"mobile\":\"" + sfTranslationParams.mobile + "\"," +
+                                "\"orderid\":\"" + sfTranslationParams.orderid + "\"," +
+                                "\"tel\":\"" + sfTranslationParams.tel + "\"" +
+                                "}";
+
+                    streamWriter.Write(input);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                httpWebRequest.KeepAlive = false;
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                string response;
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    response = streamReader.ReadToEnd();
+                    streamReader.Close();
+                }
+
+                if (!string.IsNullOrWhiteSpace(response))
+                {
+                    sfTranslationAPIResponse = JsonConvert.DeserializeObject<SFTranslationAPIResponse>(response);
+                    sfTranslationAPIResponse.responseStatus = true;
+                }
+
+                httpResponse.Close();
+
+                Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+                {
+                    dateTime = DateTime.Now,
+                    apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+                    apiType = "SFTranslation_API",
+                    LogInformation = new DataObjects.LogData.LogInformation()
+                    {
+                        LogResponse = response,
+                        LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+                        LogException = null
+                    }
+                }));
+
+            }
+            catch (Exception exception)
+            {
+                sfTranslationAPIResponse.exception = exception;
+                Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+                {
+                    dateTime = DateTime.Now,
+                    apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+                    apiType = "SFTranslation_API",
+                    LogInformation = new DataObjects.LogData.LogInformation()
+                    {
+                        LogResponse = null,
+                        LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+                        LogException = exception.InnerException.ToString()
+
+                    }
+                }));
+            }
+
+            return sfTranslationAPIResponse;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public static List<List<T>> ChunkBy<T>(this List<T> source, int chunkSize)
         {
             return source

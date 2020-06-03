@@ -40,6 +40,17 @@ namespace UPS.Quincus.APP
             return getSFCreateOrderServiceResponse;
         }
 
+
+
+        public static SFTranslationAPIResponse GetSFTranslatedAddress(SFTranslationParams sfTranslationParams)
+        {
+            SFTranslationAPIResponse sfTranslatedAddress = QuincusProxy.GetSFTranslatedAddress(sfTranslationParams);
+            return sfTranslatedAddress;
+
+        }
+
+
+
         public static GetSFCancelOrderServiceResponse SFExpressCancelOrder(SFCancelOrderServiceRequest sFCancelOrderServiceRequest)
         {
             GetSFCancelOrderServiceResponse getSFCancelOrderServiceResponse = new SFExpressProxy().getSFCancelOrderServiceResponse(sFCancelOrderServiceRequest).Result;

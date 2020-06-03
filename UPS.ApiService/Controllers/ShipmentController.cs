@@ -309,6 +309,50 @@
             return shipmentDataRequests;
         }
 
+
+
+        [Route("GetShipmentDataByCity")]
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public List<ShipmentDataRequest> GetShipmentDataByCity(int wid,string apiType)
+        {
+            //shipmentService = new ShipmentService();
+            List<ShipmentDataRequest> shipmentDataRequests = _shipmentService.GetShipmentByCity(wid, apiType);
+
+            //SFTranslationParams sfparams = new SFTranslationParams();
+            //sfparams.endpoint = configuration["SFTranslationAPI:EndPoint"];
+            //sfparams.appId = configuration["SFTranslationAPI:appId"];
+            //sfparams.contacts = configuration["SFTranslationAPI:contacts"];
+            //sfparams.company = configuration["SFTranslationAPI:company"];
+            //sfparams.token = configuration["SFTranslationAPI:token"];
+            //sfparams.address_en = "Baidu International Building, Guangdong Province, Shenzhen City, Nanshan District Room 111, 5th Floor, Block C, 1st Floor AAA AAA";
+            //sfparams.mobile = "1234567890998";
+            //sfparams.tel = null;
+            //sfparams.orderid = "123456234";
+
+
+            //SFTranslationAPIResponse sfTranslatedAddreess = QuincusService.GetSFTranslatedAddress(sfparams);
+
+            //we need to update the workflow status
+            int? workflowstatus = _shipmentService.SelectShipmentTotalStatusByWorkflowId(wid);
+            WorkflowService workflowService = new WorkflowService(_context, _addressBookService, _entityValidationService);
+            WorkflowDataResponse workflowDataResponse = workflowService.SelectWorkflowById(wid);
+            if (workflowDataResponse.Success && workflowDataResponse.Workflow != null)
+            {
+                if (workflowstatus != workflowDataResponse.Workflow.WFL_STA_TE)
+                {
+                    WorkflowDataRequest workflowDataRequest = new WorkflowDataRequest();
+                    workflowDataRequest.ID = wid;
+                    workflowDataRequest.WFL_STA_TE = workflowstatus;
+                    workflowService.UpdateWorkflowStatusById(workflowDataRequest);
+                }
+            }
+
+            return shipmentDataRequests;
+        }
+
+
         //private DbContextOptionsBuilder<ApplicationDbContext> optionsBuilder;
         [Route("GetAllShipmentData")]
         [HttpGet]
@@ -746,6 +790,186 @@
             }
         }
 
+
+
+
+
+        [Route("GetSFTranslationAddress")]
+        [HttpPost]
+        public  ActionResult GetSFTranslationAddress([FromBody] List<ShipmentDataRequest> _shipmentDataRequest)
+        {
+            SFTranslationResponse response = new SFTranslationResponse();
+            int wid = 0;
+            int successcount = 0;
+            int failedcount = 0;
+            if (_shipmentDataRequest.Any())
+            {
+                wid = _shipmentDataRequest.FirstOrDefault().WFL_ID;
+            }
+            List<SFTranslationAddressParams> sfTranslationpParams = new List<SFTranslationAddressParams>();
+
+            foreach (ShipmentDataRequest shipmentdata in _shipmentDataRequest)
+            {
+
+                SFTranslationParams sfparams = new SFTranslationParams();
+                sfparams.endpoint = configuration["SFTranslationAPI:EndPoint"];
+                sfparams.appId = configuration["SFTranslationAPI:appId"];
+                sfparams.contacts = configuration["SFTranslationAPI:contacts"];
+                sfparams.company = configuration["SFTranslationAPI:company"];
+                sfparams.token = configuration["SFTranslationAPI:token"];
+                sfparams.address_en = shipmentdata.RCV_ADR_TE;
+                sfparams.mobile = "1234567890998";
+                sfparams.tel = null;
+                sfparams.orderid = shipmentdata.PKG_NR_TE;
+
+
+                SFTranslationAPIResponse sfTranslatedAddreess = QuincusService.GetSFTranslatedAddress(sfparams);
+
+                if (sfTranslatedAddreess.status == "1")
+                {
+                    successcount = successcount + 1;
+                    SFTranslationAddressParams sfParameters = new SFTranslationAddressParams();
+                    sfParameters.data = sfTranslatedAddreess.data;
+                    sfParameters.address_en = shipmentdata.RCV_ADR_TE;
+                    sfParameters.consigneeCompany = shipmentdata.RCV_CPY_TE;
+                    sfParameters.packageNum = shipmentdata.PKG_NR_TE;
+                    sfTranslationpParams.Add(sfParameters);
+
+
+                }
+                else
+                {
+
+                    failedcount = failedcount + 1;
+
+                }
+
+            }
+
+            response.successcount = successcount;
+            response.failedcount = failedcount;
+            response.response = sfTranslationpParams;
+
+            if (successcount > 0)
+            {
+                
+                //insert addresses into Address Book
+                _addressBookService.InsertSFAddress(sfTranslationpParams);
+
+                try
+                {
+                    var requestIds = _shipmentDataRequest.Select(_ => _.ID).ToList();
+                    List<ShipmentDataRequest> existingShipmentDetails =
+                        this._context.shipmentDataRequests
+                        .Where(ShpDetail =>
+                            ShpDetail.WFL_ID == wid
+                            &&
+                                (ShpDetail.SMT_STA_NR == ((int)Enums.ATStatus.Uploaded))
+                             && (!requestIds.Contains(ShpDetail.ID))
+                            )
+                        .ToList();
+
+
+                  
+
+
+
+                    sfTranslationpParams.ForEach(datalist =>
+                    {
+                        List<SFTranslationAddressParams> records = (List<SFTranslationAddressParams>)sfTranslationpParams;
+                        List<ShipmentDataRequest> shipmentDataRequestList = new List<ShipmentDataRequest>(sfTranslationpParams.Count);
+
+                        foreach (SFTranslationAddressParams record in records)
+                        {
+                            ShipmentDataRequest currentShipmentDataRequest =
+                                   _shipmentDataRequest.FirstOrDefault(_ => _.PKG_NR_TE == record.packageNum);
+                            ShipmentDataRequest shipmentDataRequest = CreateSFShipmentAddressUpdateRequest(currentShipmentDataRequest, record);
+
+                            shipmentDataRequestList.Add(shipmentDataRequest);
+
+                            // Checking any same address are avaible, If there then updating those address also
+
+                            List<ShipmentDataRequest> sameAddressShpRequest =
+                                existingShipmentDetails.Where(
+                                    (ShipmentDataRequest data) =>
+                                        data.RCV_ADR_TE.ToLower().Replace(" ", "")
+                                        .Equals(currentShipmentDataRequest.RCV_ADR_TE.ToLower().Replace(" ", ""))
+                                        )
+                                .ToList();
+                            if (sameAddressShpRequest.Any())
+                            {
+                                sameAddressShpRequest.ForEach(shpDetails =>
+                                {
+                                    var sameaddressRequest = CreateSFShipmentAddressUpdateRequest(shpDetails, record);
+                                    shipmentDataRequestList.Add(sameaddressRequest);
+                                });
+                            }
+                        }
+
+                        shipmentDataRequestList = shipmentDataRequestList.GroupBy(x => x.ID).Select(x => x.First()).ToList();
+                        _shipmentService.UpdateShipmentAddressByIds(shipmentDataRequestList);
+
+                        //we need to update the workflow status
+                        int? workflowstatus = _shipmentService.SelectShipmentTotalStatusByWorkflowId(wid);
+                        WorkflowDataRequest workflowDataRequest = new WorkflowDataRequest();
+                        workflowDataRequest.ID = wid;
+                        workflowDataRequest.WFL_STA_TE = workflowstatus;
+                        _workflowService.UpdateWorkflowStatusById(workflowDataRequest);
+                    });
+
+                }
+                catch (Exception exception)
+                {
+                    AuditEventEntry.WriteEntry(exception);
+                }
+
+
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                {
+                    apiTypes = UPS.DataObjects.LogData.APITypes.SFTranslation,
+                    apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 10),
+                    dateTime = System.DateTime.Now,
+                    LogInformation = new UPS.DataObjects.LogData.LogInformation()
+                    {
+                        LogException = null,
+                        LogRequest =  JsonConvert.SerializeObject(_shipmentDataRequest),
+                        LogResponse = JsonConvert.SerializeObject(response)
+                    }
+                }));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                return Ok(response);
+
+
+            }
+            else
+            {
+                return Ok(response);
+            }
+
+            
+               
+
+           
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private  ShipmentDataRequest CreateShipmentAddressUpdateRequest(ShipmentDataRequest shipmentDataRequest, Geocode geocode)
         {
             
@@ -768,6 +992,29 @@
 
             return shipmentDataRequest;
         }
+
+
+        private ShipmentDataRequest CreateSFShipmentAddressUpdateRequest(ShipmentDataRequest shipmentDataRequest, SFTranslationAddressParams sfTranslatedData)
+        {
+
+            shipmentDataRequest.SHP_ADR_TR_TE = sfTranslatedData.data.address_cn;
+            shipmentDataRequest.ADR_SRC = Constants.AdrSrc.SFTranslation.ToString();
+            if (
+                        !string.IsNullOrEmpty(sfTranslatedData.data.address_cn)
+
+               )
+            {
+                shipmentDataRequest.SMT_STA_NR = ((int)Enums.ATStatus.Translated);
+            }
+            else
+            {
+                shipmentDataRequest.SMT_STA_NR = shipmentDataRequest.SMT_STA_NR;
+            }
+
+            return shipmentDataRequest;
+        }
+
+
 
         [Route("UpdateShipmentCode")]
         [HttpPost]

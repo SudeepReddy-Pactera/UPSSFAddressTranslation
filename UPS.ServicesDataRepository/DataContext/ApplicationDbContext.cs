@@ -42,6 +42,7 @@ namespace UPS.ServicesDataRepository.DataContext
             builder.Entity<UserCityMapping>().ToTable("USR-CTY-MPG");
             builder.Entity<UserRole>().ToTable("USR-IN-RLE");
             builder.Entity<UpsRoles>().ToTable("RLE");
+            builder.Entity<SFCity>().ToTable("SF-CTY");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -93,6 +94,10 @@ namespace UPS.ServicesDataRepository.DataContext
             get; set;
         }
         public  DbSet<UpsRoles> UpsRoles
+        {
+            get; set;
+        }
+        public DbSet<SFCity> SFCity
         {
             get; set;
         }

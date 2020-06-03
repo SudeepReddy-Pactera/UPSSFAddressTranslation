@@ -34,6 +34,8 @@ namespace UPS.DataObjects.LogData
         AddressBookSetup = 5,
         EFCoreContext = 6,
         ExcelUpload=7,
-        Others = 8
+        Others = 8,
+        SFTranslation_API=9,
+        SFTranslation = 10
     }
 }

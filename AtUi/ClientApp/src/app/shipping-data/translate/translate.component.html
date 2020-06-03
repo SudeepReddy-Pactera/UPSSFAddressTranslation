@@ -2,12 +2,18 @@
   <div class="col-md-1">
     <button mat-raised-button color="primary" (click)="toggleSelect()"> {{toggleSelectAll}} </button>
   </div>
-  <div class="nobmargin col-md-2">
-    <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="filterText" placeholder="Filter">
-    </mat-form-field>
+  <div class="nobmargin col-md-5">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="filterText" placeholder="Filter">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select  [(ngModel)]="apitype" (selectionChange)="LoadApiType($event.value)">
+          <mat-option *ngFor="let status of apivalues" [value]="status">{{status}} </mat-option>
+        </mat-select>
+      </mat-form-field>
+
   </div>
-  <div class="col-md-9 text-right">
+  <div class="col-md-6 text-right">
     <label>Selected row count : {{selection.selected.length}}</label>
     <button mat-raised-button color="primary" (click)="sendForTranslate()"> Translate </button>
     <button mat-raised-button color="primary" (click)="exportToExcel()"> Export to Excel </button>

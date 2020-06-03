@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -163,5 +164,94 @@
 
             return getSFCancelOrderServiceResponse;
         }
+
+
+
+
+        //public static SFTranslationAPIResponse GetSFTranslatedAddress()
+        //{
+        //    SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
+        //    var input = string.Empty;
+        //    try
+        //    {
+        //        var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://outint.sf-express.com/V1/translation/single");
+        //        if (string.Equals(MapProxy.WebProxyEnable, true.ToString(), StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            WebProxy myProxy = new WebProxy(MapProxy.webProxyURI, false, null, new NetworkCredential(MapProxy.webProxyUsername, MapProxy.webProxyPassword));
+        //            httpWebRequest.Proxy = myProxy;
+        //        }
+        //        httpWebRequest.ContentType = "application/json";
+        //        httpWebRequest.Method = "POST";
+        //        using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+        //        {
+        //            input = "{\"address_en\":\"" + "Baidu International Building, Guangdong Province, Shenzhen City, Nanshan District Room 111, 5th Floor, Block C, 1st Floor AAA AAA" + "\"," +
+        //                        "\"appId\":\"" + "ups"+ "\"" +
+        //                        "\"token\":\"" + "83f6016d-d206-4619-89e8-666313286d13" + "\"" +
+        //                        "\"company\":\"" + "Company" + "\"" +
+        //                        "\"contacts\":\"" + "Contacts" + "\"" +
+        //                        "\"mobile\":\"" + "18936127776" + "\"" +
+        //                        "\"orderid\":\"" + "123456" + "\"" +
+        //                        "\"tel\":\"" + "18936127776" + "\"" +
+        //                        "}";
+
+        //            streamWriter.Write(input);
+        //            streamWriter.Flush();
+        //            streamWriter.Close();
+        //        }
+        //        httpWebRequest.KeepAlive = false;
+        //        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+        //        string response;
+
+        //        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+        //        {
+        //            response = streamReader.ReadToEnd();
+        //            streamReader.Close();
+        //        }
+
+        //        if (!string.IsNullOrWhiteSpace(response))
+        //        {
+        //            sfTranslationAPIResponse.data = JsonConvert.DeserializeObject<SFTranslationDataResponse>(response);
+        //            sfTranslationAPIResponse.responseStatus = true;
+        //        }
+
+        //        httpResponse.Close();
+
+        //        Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+        //        {
+        //            dateTime = DateTime.Now,
+        //            apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+        //            apiType = "SFTranslation_API",
+        //            LogInformation = new DataObjects.LogData.LogInformation()
+        //            {
+        //                LogResponse = response,
+        //                LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+        //                LogException = null
+        //            }
+        //        }));
+
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        sfTranslationAPIResponse.exception = exception;
+        //        Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+        //        {
+        //            dateTime = DateTime.Now,
+        //            apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+        //            apiType = "SFTranslation_API",
+        //            LogInformation = new DataObjects.LogData.LogInformation()
+        //            {
+        //                LogResponse = null,
+        //                LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+        //                LogException = exception.InnerException.ToString()
+
+        //            }
+        //        }));
+        //    }
+
+        //    return sfTranslationAPIResponse;
+        //}
+
+
+
     }
 }

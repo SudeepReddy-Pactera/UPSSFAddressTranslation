@@ -15,4 +15,6 @@ export class Constants {
     '1': 'Admin',
     '2': 'Operations User'
   }
+  static apiTypes=['Quincus','SFTranslation']
+
 }

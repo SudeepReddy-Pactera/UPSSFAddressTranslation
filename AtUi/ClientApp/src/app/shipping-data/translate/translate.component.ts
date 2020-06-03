@@ -34,6 +34,7 @@ export class TranslateComponent implements OnInit {
   public WorkflowID: any;
   public shipmentStatusList = Constants.ShipmentStatusList;
   public PODoptions = Constants.PODoptions;
+  public apivalues = Constants.apiTypes;
   dataSource = new MatTableDataSource<Element>();
   public errorMessage: string;
   selection = new SelectionModel<any>(true, []);
@@ -48,6 +49,9 @@ export class TranslateComponent implements OnInit {
   codId: any;
   translatedAdd: any;
   extraService: any;
+  apitype: any = Constants.apiTypes[0];
+  dropdownForm: FormGroup;
+
   constructor(private shippingService: ShippingService, private activatedRoute: ActivatedRoute,
     private router: Router, public dialog: MatDialog,
     public dataService: DataService,
@@ -67,11 +71,17 @@ export class TranslateComponent implements OnInit {
   //}
 
   ngOnInit() {
+    this.apitype = this.apivalues[0];
+
+    this.dropdownForm = new FormGroup({
+      apitype: new FormControl('',[])
+    });
+
     this.WorkflowID = this.activatedRoute.snapshot.params.WorkflowID;
     this.eventsSubscription = this.events.subscribe((event: any) => {
       let selectedTabIndex = event.selectedIndex;
       if (this.WorkflowID && selectedTabIndex == MatStepperTab.TranslatedTab) {
-        this.getTranslateData(this.WorkflowID)
+        this.getTranslateDataByCity(this.WorkflowID, this.apitype);
       }
     });
   }
@@ -80,8 +90,31 @@ export class TranslateComponent implements OnInit {
     this.eventsSubscription.unsubscribe()
   }
 
-  getTranslateData(WorkflowID: any) {
-    this.shippingService.getTranslateData(WorkflowID).subscribe((response: any) => {
+  //getTranslateData(WorkflowID: any) {
+  //  this.shippingService.getTranslateData(WorkflowID).subscribe((response: any) => {
+  //    if (response) {
+  //      this.dataSource.data = response;
+  //    } else {
+  //      this.dataSource.data = [];
+  //    }
+  //    this.dataSource.paginator = this.paginator;
+  //    this.dataSource.sort = this.sort;
+  //    this.selection.clear();
+  //    this.filterText = '';
+  //    this.applyFilter('');
+  //    this.toggleSelectAll = 'Select All';
+  //  }, error => (this.errorMessage = <any>error));
+  //}
+
+  LoadApiType() {
+    console.log(this.apitype);
+    this.getTranslateDataByCity(this.WorkflowID, this.apitype);
+    
+  }
+
+
+  getTranslateDataByCity(WorkflowID: any,apitype:any) {
+    this.shippingService.getTranslateDataByCity(WorkflowID,apitype).subscribe((response: any) => {
       if (response) {
         this.dataSource.data = response;
       } else {
@@ -95,6 +128,7 @@ export class TranslateComponent implements OnInit {
       this.toggleSelectAll = 'Select All';
     }, error => (this.errorMessage = <any>error));
   }
+
 
   getValidData(dataArray: any[]) {
     return dataArray.filter(data => !(data.smT_STA_NR === 2 || data.smT_STA_NR === 3 || data.smT_STA_NR === 1));
@@ -218,7 +252,7 @@ export class TranslateComponent implements OnInit {
           //shipmentDetailToUpdate.smT_STA_NR = response.shipmentDataRequest.smT_STA_NR;
           //shipmentDetailToUpdate.smT_STA_TE = response.shipmentDataRequest.smT_STA_TE;
           //shipmentDetailToUpdate.poD_RTN_SVC = response.shipmentDataRequest.poD_RTN_SVC;
-          this.getTranslateData(this.WorkflowID);
+          this.getTranslateDataByCity(this.WorkflowID, this.apitype);
           this.notificationService.openSuccessMessageNotification("Data Updated Successfully.");
         },
           error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText))
@@ -310,42 +344,70 @@ export class TranslateComponent implements OnInit {
       if (mainData.rcV_ADR_TE === null) { mainData.rcV_ADR_TE = '' };
       this.dataForTranslate.push(mainData);
     }
-
-    this.shippingService.sendDataForTranslate(this.dataForTranslate).subscribe(
-      (response: any) => {
-        if (response) {
-          if (response.length > 0) {
-            var EmptyCount: number = 0;
-            var SuccessCount: number = 0;
-            for (let res of response) {
-              if (res.geocode) {
-                for (let geocode of res.geocode) {
-                  if (geocode.translated_adddress === '' || geocode.translated_adddress === null) {
-                    EmptyCount = EmptyCount + 1;
-                  } else {
-                    SuccessCount = SuccessCount + 1;
+    if (this.apitype == "Quincus") {
+      this.shippingService.sendDataForTranslate(this.dataForTranslate).subscribe(
+        (response: any) => {
+          if (response) {
+            if (response.length > 0) {
+              var EmptyCount: number = 0;
+              var SuccessCount: number = 0;
+              for (let res of response) {
+                if (res.geocode) {
+                  for (let geocode of res.geocode) {
+                    if (geocode.translated_adddress === '' || geocode.translated_adddress === null) {
+                      EmptyCount = EmptyCount + 1;
+                    } else {
+                      SuccessCount = SuccessCount + 1;
+                    }
                   }
                 }
               }
+              const data = {
+                emptyCount: EmptyCount,
+                successCount: SuccessCount,
+                screenFrom: 'Translate'
+              }
+              this.dialogService.openSummaryDialog(data);
+              this.getTranslateDataByCity(this.WorkflowID, this.apitype);
+              this.selection.clear();
+            } else {
+              this.notificationService.openErrorMessageNotification("Invalid exception occured, please contact administrator.");
             }
-            const data = {
-              emptyCount: EmptyCount,
-              successCount: SuccessCount,
-              screenFrom: 'Translate'
-            }
-            this.dialogService.openSummaryDialog(data);
-            this.getTranslateData(this.WorkflowID);
-            this.selection.clear();
           } else {
             this.notificationService.openErrorMessageNotification("Invalid exception occured, please contact administrator.");
           }
-        } else {
-          this.notificationService.openErrorMessageNotification("Invalid exception occured, please contact administrator.");
         }
-      }
-      ,
-      error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText)
-    );
+        ,
+        error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText)
+      );
+    }
+    else if (this.apitype == "SFTranslation") {
+
+      this.shippingService.sendDataForSFTranslate(this.dataForTranslate).subscribe(
+        (response: any) => {
+          if (response) {
+            
+              
+             
+              const data = {
+                emptyCount: response.failedcount,
+                successCount: response.successcount,
+                screenFrom: 'Translate'
+              }
+              this.dialogService.openSummaryDialog(data);
+              this.getTranslateDataByCity(this.WorkflowID, this.apitype);
+              this.selection.clear();
+            
+          } else {
+            this.notificationService.openErrorMessageNotification("Invalid exception occured, please contact administrator.");
+          }
+        }
+        ,
+        error => this.notificationService.openErrorMessageNotification(error.status + ' : ' + error.statusText)
+      );
+
+    }
+    
   }
 
   exportToExcel() {

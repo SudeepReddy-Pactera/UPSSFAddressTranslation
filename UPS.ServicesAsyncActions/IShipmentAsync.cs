@@ -10,6 +10,7 @@ namespace UPS.ServicesAsyncActions
     public interface IShipmentAsync
     {
         List<ShipmentDataRequest> GetShipment(int workflowID);
+        List<ShipmentDataRequest> GetShipmentByCity(int workflowID,string apiType);
         List<ShipmentDataRequest> GetAllShipment(int workflowID);
         int CreateShipment(ShipmentDataRequest shipmentData);
         ShipmentDataResponse CreateShipments(List<ShipmentDataRequest> shipmentDataRequests);

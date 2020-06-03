@@ -71,4 +71,47 @@ namespace UPS.DataObjects.Common
         public DateTime date_created { get; set; }
         public DateTime date_updated { get; set; }
     }
+
+
+    public class SFTranslationAddressParams
+    {
+
+        public string address_en { get; set; }
+        public string consigneeCompany { get; set; }
+        public string packageNum { get; set; }
+        public SFTranslationDataResponse data { get; set; }
+    }
+
+    public class SFTranslationResponse
+    {
+        public int successcount { get; set; }
+        public int failedcount { get; set; }
+        public List<SFTranslationAddressParams> response { get; set; }
+    }
+
+
+
+    public class SFTranslationDataResponse
+    {
+
+        public string translate_status { get; set; }
+        public string citycode { get; set; }
+        public string orderid { get; set; }
+        public string address_cn { get; set; }
+        public string deptcode { get; set; }
+
+    }
+
+    public class SFTranslationAPIResponse
+    {
+
+        public string msg { get; set; }
+        public SFTranslationDataResponse data { get; set; }
+        public string status { get; set; }
+        public bool responseStatus { get; set; }
+
+        public Exception exception { get; set; }
+
+    }
+
 }

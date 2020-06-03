@@ -172,6 +172,53 @@ namespace UPS.ServicesDataRepository
             }
         }
 
+        public void InsertSFAddress(List<SFTranslationAddressParams> sfTranslationParams)
+        {
+            try
+            {
+                List<AddressBook> addressBooksList = new List<AddressBook>();
+                foreach (var sfdata in sfTranslationParams)
+                {
+                    if
+                    (
+                        sfdata.data.address_cn != null
+                    )
+                    {
+                        List<SFTranslationAddressParams> newAddress = FilterSFNewAddress(sfTranslationParams);
+
+                        List<AddressBook> addressBooks =
+                            (from address in newAddress
+                             select
+                             new AddressBook
+                             {
+                                 
+                                 ConsigneeAddress = address?.address_en,
+                                 ConsigneeAddressId = address?.packageNum != null ? address?.packageNum : "-1",//
+                                 ConsigneeTranslatedAddress = address?.data?.address_cn,
+                                 CreatedDate = DateTime.Now,
+                                 StatusCode = "complete",
+                                 ConsigneeCompany = address?.consigneeCompany,
+                                 AddressStatus = Constants.AdrStatus.SFTranslation.ToString()
+                             }).ToList();
+
+                        List<AddressBook> validEntity = this.entityValidationService.FilterValidEntity<AddressBook>(addressBooks);
+                        if (validEntity != null && validEntity.Any())
+                        {
+                            addressBooksList.AddRange(validEntity);
+                        }
+                    }
+                }
+                if (addressBooksList.Any())
+                {
+                    this.context.BulkInsert(addressBooksList);
+                }
+            }
+            catch (Exception exception)
+            {
+                // Need to log exception if Any
+            }
+        }
+
         private List<Address> FilterNewAddress(IList<Address> addresses)
         {
             List<Address> newAddresses = addresses
@@ -184,6 +231,23 @@ namespace UPS.ServicesDataRepository
                                    .Contains(ad.address.Replace(" ", "").ToLower().Trim()))
                     .GroupBy(_=>_.address)
                     .Select(x=>x.First())
+                    .ToList();
+
+            return newAddresses;
+        }
+
+        private List<SFTranslationAddressParams> FilterSFNewAddress(List<SFTranslationAddressParams> sfTranslationParams)
+        {
+            List<SFTranslationAddressParams> newAddresses = sfTranslationParams
+                   .Where(
+                       (SFTranslationAddressParams ad) =>
+                           !this.context.AddressBooks
+                               .Select(
+                               (AddressBook x) =>
+                                   x.ConsigneeAddress.Replace(" ", "").ToLower().Trim()).ToList()
+                                   .Contains(ad.address_en.Replace(" ", "").ToLower().Trim()))
+                    .GroupBy(_ => _.address_en)
+                    .Select(x => x.First())
                     .ToList();
 
             return newAddresses;

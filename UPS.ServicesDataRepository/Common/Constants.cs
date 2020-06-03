@@ -12,12 +12,14 @@
         {
             public const string AdrBook = "Address Book";
             public const string Quincus = "Quincus";
+            public const string SFTranslation = "SFTranslation";
         }
 
         public static class AdrStatus
         {
             public const string Curated = "Curated";
             public const string Quincus = "Quincus";
+            public const string SFTranslation = "SFTranslation";
         }
     }
 
