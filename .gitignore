@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /UPS.ApiService/www
 /UPS.ApiService/.config/dotnet-tools.json
+/AtUi/.config/dotnet-tools.json

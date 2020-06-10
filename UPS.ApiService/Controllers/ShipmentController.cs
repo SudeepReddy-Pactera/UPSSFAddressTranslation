@@ -71,7 +71,7 @@
             this._context = applicationDbContext;
             this._addressBookService = addressBookService;
             this._entityValidationService = entityValidationService;
-            this._workflowService = new WorkflowService(_context, _addressBookService,_entityValidationService);
+            this._workflowService = new WorkflowService(_context, _addressBookService, _entityValidationService);
             this._quincusAddressTranslationRequest = QuincusAddressTranslationRequest;
             this.addressAuditLogService = addressAuditLogAsync;
             this._shipperCompanyService = shipperCompanyAsync;
@@ -80,7 +80,7 @@
         private static int _workflowID = 0;
         [Route("ExcelFileUpload")]
         [HttpPost]
-      
+
         public async Task<ActionResult> ExcelFile(IList<IFormFile> excelFileName)
         {
             string[] validationSet = configuration.GetSection("ExcelFileValidation:mandatoryFields").GetChildren().Select(val => val.Value).ToArray();
@@ -114,10 +114,10 @@
                             }
 
 
-                            ExcelExtensionReponse excelExtensionReponse = 
+                            ExcelExtensionReponse excelExtensionReponse =
                                 new ExcelExtension()
                                 .Test(
-                                    filePath,   
+                                    filePath,
                                     configuration.GetSection("ExcelFileValidation:mandatoryFields").GetChildren().Select(val => val.Value).ToArray(),
                                     configuration.GetSection("ColumnValidation:regexList").GetChildren().Select(val => val.Value).ToArray(),
                                     configuration.GetSection("ColumnValidation:columnLengths").GetChildren().Select(val => val.Value).ToArray(),
@@ -144,7 +144,7 @@
                                 {
                                     shipmentDataResponse.Success = false;
                                     shipmentDataResponse.OperationExceptionMsg = result.OperationExceptionMsg;
-                                    WorkflowService workflowService = new WorkflowService(_context,_addressBookService,_entityValidationService);
+                                    WorkflowService workflowService = new WorkflowService(_context, _addressBookService, _entityValidationService);
                                     workflowService.DeleteWorkflowById(_workflowID);
                                     excelExtensionReponse.success = false;
                                 }
@@ -171,7 +171,7 @@
                 }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
                 {
                     apiTypes = UPS.DataObjects.LogData.APITypes.ExcelUpload,
                     apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 7),
@@ -264,7 +264,7 @@
             _workflowService.UpdateWorkflowStatusById(workflowDataRequest);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+            Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
             {
                 apiTypes = UPS.DataObjects.LogData.APITypes.EFCoreContext,
                 apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 6),
@@ -295,9 +295,9 @@
             int? workflowstatus = _shipmentService.SelectShipmentTotalStatusByWorkflowId(wid);
             WorkflowService workflowService = new WorkflowService(_context, _addressBookService, _entityValidationService);
             WorkflowDataResponse workflowDataResponse = workflowService.SelectWorkflowById(wid);
-            if(workflowDataResponse.Success && workflowDataResponse.Workflow != null)
+            if (workflowDataResponse.Success && workflowDataResponse.Workflow != null)
             {
-                if(workflowstatus != workflowDataResponse.Workflow.WFL_STA_TE)
+                if (workflowstatus != workflowDataResponse.Workflow.WFL_STA_TE)
                 {
                     WorkflowDataRequest workflowDataRequest = new WorkflowDataRequest();
                     workflowDataRequest.ID = wid;
@@ -315,24 +315,9 @@
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public List<ShipmentDataRequest> GetShipmentDataByCity(int wid,string apiType)
+        public List<ShipmentDataRequest> GetShipmentDataByCity(int wid, string apiType)
         {
-            //shipmentService = new ShipmentService();
             List<ShipmentDataRequest> shipmentDataRequests = _shipmentService.GetShipmentByCity(wid, apiType);
-
-            //SFTranslationParams sfparams = new SFTranslationParams();
-            //sfparams.endpoint = configuration["SFTranslationAPI:EndPoint"];
-            //sfparams.appId = configuration["SFTranslationAPI:appId"];
-            //sfparams.contacts = configuration["SFTranslationAPI:contacts"];
-            //sfparams.company = configuration["SFTranslationAPI:company"];
-            //sfparams.token = configuration["SFTranslationAPI:token"];
-            //sfparams.address_en = "Baidu International Building, Guangdong Province, Shenzhen City, Nanshan District Room 111, 5th Floor, Block C, 1st Floor AAA AAA";
-            //sfparams.mobile = "1234567890998";
-            //sfparams.tel = null;
-            //sfparams.orderid = "123456234";
-
-
-            //SFTranslationAPIResponse sfTranslatedAddreess = QuincusService.GetSFTranslatedAddress(sfparams);
 
             //we need to update the workflow status
             int? workflowstatus = _shipmentService.SelectShipmentTotalStatusByWorkflowId(wid);
@@ -468,11 +453,11 @@
                         //}
                         //else
                         //{
-                            createOrderShipmentResponse.FailedToProcessShipments.Add(
-                                string.Format("{0}:{1}:{2}",
-                                orderRequest.pkG_NR_TE,
-                                xmlDocument.GetElementsByTagName("ERROR")[0].Attributes[0].InnerText,
-                                xmlDocument.GetElementsByTagName("ERROR")[0].InnerXml));
+                        createOrderShipmentResponse.FailedToProcessShipments.Add(
+                            string.Format("{0}:{1}:{2}",
+                            orderRequest.pkG_NR_TE,
+                            xmlDocument.GetElementsByTagName("ERROR")[0].Attributes[0].InnerText,
+                            xmlDocument.GetElementsByTagName("ERROR")[0].InnerXml));
                         //}
                     }
                     else
@@ -498,7 +483,7 @@
             }
             //we need to update the workflow status
             int? workflowstatus = _shipmentService.SelectShipmentTotalStatusByWorkflowId(_workflowID);
-            WorkflowService workflowService = new WorkflowService(_context,_addressBookService,_entityValidationService);
+            WorkflowService workflowService = new WorkflowService(_context, _addressBookService, _entityValidationService);
             WorkflowDataRequest workflowDataRequest = new WorkflowDataRequest();
             workflowDataRequest.ID = _workflowID;
             workflowDataRequest.WFL_STA_TE = workflowstatus;
@@ -563,7 +548,7 @@
             {
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
                 {
                     apiTypes = UPS.DataObjects.LogData.APITypes.SFExpress,
                     apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 1),
@@ -647,7 +632,7 @@
                         {
                             shipmentDetailsDictionary.Add(address.id, address.rcV_CPY_TE);
                         });
-                       
+
                     });
 
                     var QuincusResponse = QuincusService.GetGeoCodeReponseFromQuincus(new UPS.Quincus.APP.Request.QuincusGeoCodeDataRequest()
@@ -661,7 +646,7 @@
                     if (QuincusResponse.ResponseStatus)
                     {
                         // Insert Address into AddressBook
-                        _addressBookService.InsertAddress(QuincusResponse.QuincusReponseDataList,shipmentDetailsDictionary);
+                        _addressBookService.InsertAddress(QuincusResponse.QuincusReponseDataList, shipmentDetailsDictionary);
 
                         try
                         {
@@ -725,10 +710,10 @@
                             AuditEventEntry.WriteEntry(exception);
                         }
 
-                       
+
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                        Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
                         {
                             apiTypes = UPS.DataObjects.LogData.APITypes.QuincusAPI_Translation,
                             apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 4),
@@ -747,7 +732,7 @@
                     else
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                        Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
                         {
                             apiTypes = UPS.DataObjects.LogData.APITypes.QuincusAPI_Translation,
                             apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 4),
@@ -767,10 +752,10 @@
                 else
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(()=>iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
+                    Task.Run(() => iCustomLog.AddLogEntry(new UPS.DataObjects.LogData.LogDataModel()
                     {
                         apiTypes = UPS.DataObjects.LogData.APITypes.QuincusAPI_Translation,
-                        apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes),4),
+                        apiType = Enum.GetName(typeof(UPS.DataObjects.LogData.APITypes), 4),
                         dateTime = System.DateTime.Now,
                         LogInformation = new UPS.DataObjects.LogData.LogInformation()
                         {
@@ -796,7 +781,7 @@
 
         [Route("GetSFTranslationAddress")]
         [HttpPost]
-        public  ActionResult GetSFTranslationAddress([FromBody] List<ShipmentDataRequest> _shipmentDataRequest)
+        public ActionResult GetSFTranslationAddress([FromBody] List<ShipmentDataRequest> _shipmentDataRequest)
         {
             SFTranslationResponse response = new SFTranslationResponse();
             int wid = 0;
@@ -818,7 +803,7 @@
                 sfparams.company = configuration["SFTranslationAPI:company"];
                 sfparams.token = configuration["SFTranslationAPI:token"];
                 sfparams.address_en = shipmentdata.RCV_ADR_TE;
-                sfparams.mobile = "1234567890998";
+                sfparams.mobile = shipmentdata.PH_NR;
                 sfparams.tel = null;
                 sfparams.orderid = shipmentdata.PKG_NR_TE;
 
@@ -834,7 +819,6 @@
                     sfParameters.consigneeCompany = shipmentdata.RCV_CPY_TE;
                     sfParameters.packageNum = shipmentdata.PKG_NR_TE;
                     sfTranslationpParams.Add(sfParameters);
-
 
                 }
                 else
@@ -852,10 +836,9 @@
 
             if (successcount > 0)
             {
-                
+
                 //insert addresses into Address Book
                 _addressBookService.InsertSFAddress(sfTranslationpParams);
-
                 try
                 {
                     var requestIds = _shipmentDataRequest.Select(_ => _.ID).ToList();
@@ -868,11 +851,6 @@
                              && (!requestIds.Contains(ShpDetail.ID))
                             )
                         .ToList();
-
-
-                  
-
-
 
                     sfTranslationpParams.ForEach(datalist =>
                     {
@@ -934,7 +912,7 @@
                     LogInformation = new UPS.DataObjects.LogData.LogInformation()
                     {
                         LogException = null,
-                        LogRequest =  JsonConvert.SerializeObject(_shipmentDataRequest),
+                        LogRequest = JsonConvert.SerializeObject(_shipmentDataRequest),
                         LogResponse = JsonConvert.SerializeObject(response)
                     }
                 }));
@@ -948,31 +926,21 @@
             {
                 return Ok(response);
             }
-
-            
-               
-
-           
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private  ShipmentDataRequest CreateShipmentAddressUpdateRequest(ShipmentDataRequest shipmentDataRequest, Geocode geocode)
+        //returns true if user city is mapped with SF Tra Translation cities,else return false
+        [Route("GetAPIType")]
+        [HttpGet]
+        public ActionResult GetAPIType()
         {
-            
+            int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtConstant.UserId)?.Value);
+            return Ok(this._shipperCompanyService.GetAPIType(userId));
+
+        }
+
+        private ShipmentDataRequest CreateShipmentAddressUpdateRequest(ShipmentDataRequest shipmentDataRequest, Geocode geocode)
+        {
+
             shipmentDataRequest.SHP_ADR_TR_TE = geocode.translated_adddress;
             shipmentDataRequest.ACY_TE = geocode.accuracy;
             shipmentDataRequest.CON_NR = geocode.confidence;
@@ -999,10 +967,7 @@
 
             shipmentDataRequest.SHP_ADR_TR_TE = sfTranslatedData.data.address_cn;
             shipmentDataRequest.ADR_SRC = Constants.AdrSrc.SFTranslation.ToString();
-            if (
-                        !string.IsNullOrEmpty(sfTranslatedData.data.address_cn)
-
-               )
+            if (!string.IsNullOrEmpty(sfTranslatedData.data.address_cn))
             {
                 shipmentDataRequest.SMT_STA_NR = ((int)Enums.ATStatus.Translated);
             }

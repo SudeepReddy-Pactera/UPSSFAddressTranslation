@@ -211,6 +211,29 @@
                     ToList();
         }
 
+
+
+        //return true(SFTranslation) if user city matches with SF-CTY table
+        public bool GetAPIType(int userId)
+        {
+            bool result = false;
+            var citylist= this.context.UserCityMapping
+                    .Where(
+                        (UserCityMapping city) =>
+                            city.UserId == userId)
+                    .Select(
+                        (UserCityMapping cityMapping) =>
+                            cityMapping.City.ToUpper()).
+                    ToList();
+            if (citylist.Count() > 0)
+            {
+                var anonymouslist = this.context.SFCity.Where((SFCity cities) => citylist[0].Equals(cities.CTY_NME)).ToList();
+                result = anonymouslist.Count() > 0 ? true : false;
+            }
+            return result;
+        }
+
+
         public ShipmentDataResponse SelectCompletedShipments(int workflowID)
 
         {

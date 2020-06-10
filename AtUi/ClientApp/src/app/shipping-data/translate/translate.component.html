@@ -6,12 +6,6 @@
       <mat-form-field>
         <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="filterText" placeholder="Filter">
       </mat-form-field>
-      <mat-form-field>
-        <mat-select  [(ngModel)]="apitype" (selectionChange)="LoadApiType($event.value)">
-          <mat-option *ngFor="let status of apivalues" [value]="status">{{status}} </mat-option>
-        </mat-select>
-      </mat-form-field>
-
   </div>
   <div class="col-md-6 text-right">
     <label>Selected row count : {{selection.selected.length}}</label>

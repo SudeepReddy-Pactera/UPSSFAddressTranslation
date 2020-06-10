@@ -13,6 +13,7 @@ namespace UPS.ServicesAsyncActions
         ShipmentDataResponse SelectCompletedShipments(int workflowID);
         ShipperCompanyResponse SelectShipperCompanies();
         ShipperCompanyResponse GetShipperList();
+        Boolean GetAPIType(int userId);
         ShipperCompanyResponse InsertShipper(ShipperCompanyList shipperCompanyRequest);
         ShipperCompanyResponse UpdateShipper(List<ShipperCompanyList> shipperCompanyRequests);
         ShipperCompanyResponse DeleteShipper(List<ShipperCompanyList> shipperCompanyRequests);

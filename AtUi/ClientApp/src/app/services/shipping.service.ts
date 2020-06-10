@@ -15,6 +15,10 @@ export class ShippingService {
   public getUploadedData(WorkflowID: any): Observable<any> {
     return this.httpService.makeGetRequest('api/Shipment/GetAllShipmentData?wid=' + WorkflowID);
   }
+
+  public getAPIType(): Observable<any> {
+    return this.httpService.makeGetRequest('api/Shipment/GetAPIType');
+  }
   
   public getTranslateData(WorkflowID: any): Observable<any> {
     return this.httpService.makeGetRequest('api/Shipment/GetShipmentData?wid=' + WorkflowID);

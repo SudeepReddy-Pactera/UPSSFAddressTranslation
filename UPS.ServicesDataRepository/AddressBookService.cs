@@ -198,6 +198,8 @@ namespace UPS.ServicesDataRepository
                                  CreatedDate = DateTime.Now,
                                  StatusCode = "complete",
                                  ConsigneeCompany = address?.consigneeCompany,
+                                 Unit= address?.data?.citycode,
+                                 Area= address?.data?.deptcode,
                                  AddressStatus = Constants.AdrStatus.SFTranslation.ToString()
                              }).ToList();
 
