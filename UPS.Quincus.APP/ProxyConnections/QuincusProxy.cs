@@ -105,6 +105,8 @@
         {
             SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
             var input = string.Empty;
+            string response=string.Empty;
+
             try
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(sfTranslationParams.endpoint);
@@ -133,7 +135,6 @@
                 }
                 httpWebRequest.KeepAlive = false;
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                string response;
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
@@ -157,7 +158,7 @@
                     LogInformation = new DataObjects.LogData.LogInformation()
                     {
                         LogResponse = response,
-                        LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+                        LogRequest = input,
                         LogException = null
                     }
                 }));
@@ -173,8 +174,8 @@
                     apiType = "SFTranslation_API",
                     LogInformation = new DataObjects.LogData.LogInformation()
                     {
-                        LogResponse = null,
-                        LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
+                        LogResponse = response,
+                        LogRequest = input,
                         LogException = exception.InnerException.ToString()
 
                     }
