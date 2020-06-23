@@ -292,7 +292,7 @@ namespace ExcelFileRead
                 {
                     if (string.Equals(validationColumn, "address_1", StringComparison.OrdinalIgnoreCase))
                     {
-                        validationFailedSet.Add("Delivery Address Field is missing ! Which was placed beside - receiver company in your upload excel file");
+                        validationFailedSet.Add("Address Field is missing ! Which was placed beside - receiver company in your upload excel file");
                     }
                     else
                     {
