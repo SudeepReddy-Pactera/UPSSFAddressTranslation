@@ -802,7 +802,7 @@
                 sfparams.contacts = configuration["SFTranslationAPI:contacts"];
                 sfparams.company = configuration["SFTranslationAPI:company"];
                 sfparams.token = configuration["SFTranslationAPI:token"];
-                sfparams.address_en = shipmentdata.RCV_ADR_TE;
+                sfparams.address_en = shipmentdata.RCV_ADR_TE+", "+ shipmentdata.DST_CTY_TE+", "+ shipmentdata.DST_PSL_TE;
                 sfparams.mobile = shipmentdata.PH_NR;
                 sfparams.tel = null;
                 sfparams.orderid = shipmentdata.PKG_NR_TE;
