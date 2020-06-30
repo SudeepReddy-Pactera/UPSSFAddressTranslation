@@ -134,13 +134,14 @@
                     streamWriter.Close();
                 }
                 httpWebRequest.KeepAlive = false;
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var httpResponse =  (HttpWebResponse)httpWebRequest.GetResponse();
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     response = streamReader.ReadToEnd();
                     streamReader.Close();
                 }
+
 
                 if (!string.IsNullOrWhiteSpace(response))
                 {
@@ -176,7 +177,7 @@
                     {
                         LogResponse = response,
                         LogRequest = input,
-                        LogException = exception.InnerException.ToString()
+                        LogException = exception.InnerException!=null? exception.InnerException.ToString()+ exception.StackTrace : exception.Message.ToString()+exception.StackTrace
 
                     }
                 }));
