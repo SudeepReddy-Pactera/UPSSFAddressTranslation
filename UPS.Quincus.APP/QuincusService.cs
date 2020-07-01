@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UPS.DataObjects.Common;
 using UPS.DataObjects.Shipment;
 using UPS.Quincus.APP.Configuration;
@@ -56,6 +57,14 @@ namespace UPS.Quincus.APP
             GetSFCancelOrderServiceResponse getSFCancelOrderServiceResponse = new SFExpressProxy().getSFCancelOrderServiceResponse(sFCancelOrderServiceRequest).Result;
 
             return getSFCancelOrderServiceResponse;
+        }
+
+        public async Task<SFTranslationAPIResponse> GETSFTranslatedAddresses(SFTranslationParams sfTranslationParams)
+        {
+            
+            SFTranslationAPIResponse response = await new SFExpressProxy().GetSFTranslatedAddress(sfTranslationParams);
+
+            return response;
         }
 
     }

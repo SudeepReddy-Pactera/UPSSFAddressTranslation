@@ -6,9 +6,12 @@
     using System.IO;
     using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using UPS.Application.CustomLogs;
+    using UPS.DataObjects.Common;
     using UPS.Quincus.APP.Common;
+    using UPS.Quincus.APP.Configuration;
     using UPS.Quincus.APP.Request;
     using UPS.Quincus.APP.Response;
 
@@ -167,89 +170,82 @@
 
 
 
+        public async Task<SFTranslationAPIResponse> GetSFTranslatedAddress(SFTranslationParams sfTranslationParams)
+        {
+            SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
+            string input = string.Empty;
 
-        //public static SFTranslationAPIResponse GetSFTranslatedAddress()
-        //{
-        //    SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
-        //    var input = string.Empty;
-        //    try
-        //    {
-        //        var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://outint.sf-express.com/V1/translation/single");
-        //        if (string.Equals(MapProxy.WebProxyEnable, true.ToString(), StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            WebProxy myProxy = new WebProxy(MapProxy.webProxyURI, false, null, new NetworkCredential(MapProxy.webProxyUsername, MapProxy.webProxyPassword));
-        //            httpWebRequest.Proxy = myProxy;
-        //        }
-        //        httpWebRequest.ContentType = "application/json";
-        //        httpWebRequest.Method = "POST";
-        //        using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-        //        {
-        //            input = "{\"address_en\":\"" + "Baidu International Building, Guangdong Province, Shenzhen City, Nanshan District Room 111, 5th Floor, Block C, 1st Floor AAA AAA" + "\"," +
-        //                        "\"appId\":\"" + "ups"+ "\"" +
-        //                        "\"token\":\"" + "83f6016d-d206-4619-89e8-666313286d13" + "\"" +
-        //                        "\"company\":\"" + "Company" + "\"" +
-        //                        "\"contacts\":\"" + "Contacts" + "\"" +
-        //                        "\"mobile\":\"" + "18936127776" + "\"" +
-        //                        "\"orderid\":\"" + "123456" + "\"" +
-        //                        "\"tel\":\"" + "18936127776" + "\"" +
-        //                        "}";
+            try
+            {
 
-        //            streamWriter.Write(input);
-        //            streamWriter.Flush();
-        //            streamWriter.Close();
-        //        }
-        //        httpWebRequest.KeepAlive = false;
-        //        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-        //        string response;
+                input = "{\"address_en\":\"" + sfTranslationParams.address_en + "\"," +
+                                   "\"appId\":\"" + sfTranslationParams.appId + "\"," +
+                                   "\"token\":\"" + sfTranslationParams.token + "\"," +
+                                   "\"company\":\"" + sfTranslationParams.company + "\"," +
+                                   "\"contacts\":\"" + sfTranslationParams.contacts + "\"," +
+                                   "\"mobile\":\"" + sfTranslationParams.mobile + "\"," +
+                                   "\"orderid\":\"" + sfTranslationParams.orderid + "\"," +
+                                   "\"tel\":\"" + sfTranslationParams.tel + "\"" +
+                                   "}";
 
-        //        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-        //        {
-        //            response = streamReader.ReadToEnd();
-        //            streamReader.Close();
-        //        }
+                HttpClient client = null;
+                if (string.Equals(MapProxy.WebProxyEnable, false.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    client = new HttpClient();
+                }
+                else
+                {
+                    client = new HttpClient(GetHttpClientHandler());
+                }
 
-        //        if (!string.IsNullOrWhiteSpace(response))
-        //        {
-        //            sfTranslationAPIResponse.data = JsonConvert.DeserializeObject<SFTranslationDataResponse>(response);
-        //            sfTranslationAPIResponse.responseStatus = true;
-        //        }
+                client.BaseAddress = new Uri(sfTranslationParams.endpoint);
 
-        //        httpResponse.Close();
+                //client.DefaultRequestHeaders.Add("Authorization", authtoken);
 
-        //        Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
-        //        {
-        //            dateTime = DateTime.Now,
-        //            apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
-        //            apiType = "SFTranslation_API",
-        //            LogInformation = new DataObjects.LogData.LogInformation()
-        //            {
-        //                LogResponse = response,
-        //                LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
-        //                LogException = null
-        //            }
-        //        }));
+                StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
 
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        sfTranslationAPIResponse.exception = exception;
-        //        Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
-        //        {
-        //            dateTime = DateTime.Now,
-        //            apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
-        //            apiType = "SFTranslation_API",
-        //            LogInformation = new DataObjects.LogData.LogInformation()
-        //            {
-        //                LogResponse = null,
-        //                LogRequest = string.Format("Senstive Information Identified {0}", System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))),
-        //                LogException = exception.InnerException.ToString()
+                HttpResponseMessage response = client.PostAsync("", content).Result;
 
-        //            }
-        //        }));
-        //    }
+                string resultContent = await response.Content.ReadAsStringAsync();
 
-        //    return sfTranslationAPIResponse;
-        //}
+                sfTranslationAPIResponse = JsonConvert.DeserializeObject<SFTranslationAPIResponse>(resultContent);
+
+                await Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+                {
+                    dateTime = DateTime.Now,
+                    apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+                    apiType = "SFTranslation_API",
+                    LogInformation = new DataObjects.LogData.LogInformation()
+                    {
+                        LogResponse = resultContent,
+                        LogRequest = input,
+                        LogException = null
+                    }
+                }));
+            }
+            catch(Exception exception)
+            {
+                sfTranslationAPIResponse.exception = exception;
+               await Task.Run(() => AuditEventEntry.LogEntry(new DataObjects.LogData.LogDataModel()
+                {
+                    dateTime = DateTime.Now,
+                    apiTypes = DataObjects.LogData.APITypes.SFTranslation_API,
+                    apiType = "SFTranslation_API",
+                    LogInformation = new DataObjects.LogData.LogInformation()
+                    {
+                        LogResponse = null,
+                        LogRequest = input,
+                        LogException = exception.InnerException != null ? exception.InnerException.ToString() + exception.StackTrace : exception.Message.ToString() + exception.StackTrace
+
+                    }
+                }));
+            }
+
+            return sfTranslationAPIResponse;
+        }
+
+
+
 
 
 

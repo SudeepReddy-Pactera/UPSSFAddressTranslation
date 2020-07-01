@@ -781,7 +781,7 @@
 
         [Route("GetSFTranslationAddress")]
         [HttpPost]
-        public ActionResult GetSFTranslationAddress([FromBody] List<ShipmentDataRequest> _shipmentDataRequest)
+        public async Task<ActionResult> GetSFTranslationAddress([FromBody] List<ShipmentDataRequest> _shipmentDataRequest)
         {
             SFTranslationResponse response = new SFTranslationResponse();
             int wid = 0;
@@ -807,8 +807,8 @@
                 sfparams.tel = null;
                 sfparams.orderid = shipmentdata.PKG_NR_TE;
 
-
-                SFTranslationAPIResponse sfTranslatedAddreess = QuincusService.GetSFTranslatedAddress(sfparams);
+                QuincusService service = new QuincusService();
+                SFTranslationAPIResponse sfTranslatedAddreess = await service.GETSFTranslatedAddresses(sfparams);
 
                 if (sfTranslatedAddreess.status == "1")
                 {

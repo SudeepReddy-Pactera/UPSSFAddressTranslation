@@ -6,6 +6,9 @@
     using System.Linq;
     using System.Net;
     using System.Net.Cache;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using UPS.Application.CustomLogs;
@@ -21,7 +24,8 @@
         public static QuincusTokenDataResponse GetToken(QuincusParams quincusParams)
         {
             QuincusTokenDataResponse quincusTokenDataResponse = new QuincusTokenDataResponse();
-            var input = string.Empty;
+
+                var input = string.Empty;
             try
             {
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(quincusParams.endpoint);
@@ -99,9 +103,7 @@
 
 
 
-
-
-        public static SFTranslationAPIResponse GetSFTranslatedAddress(SFTranslationParams sfTranslationParams)
+        public static  SFTranslationAPIResponse GetSFTranslatedAddress(SFTranslationParams sfTranslationParams)
         {
             SFTranslationAPIResponse sfTranslationAPIResponse = new SFTranslationAPIResponse();
             var input = string.Empty;
@@ -185,20 +187,6 @@
 
             return sfTranslationAPIResponse;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
