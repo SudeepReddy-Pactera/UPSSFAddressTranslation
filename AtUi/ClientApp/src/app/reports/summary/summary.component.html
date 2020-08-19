@@ -1,0 +1,130 @@
+<div class="routepage">
+  <div class="pageTitle"><span>Summary</span></div>
+  <br />
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" [(ngModel)]="filterText" placeholder="Filter">
+      </mat-form-field>
+    </div>
+    <div class="col-md-9 text-right">
+        <mat-form-field class="dateSelect">
+          <input matInput id="fromDate" [matDatepicker]="picker1"  [(ngModel)]="fromDate" placeholder="From" readonly>
+          <mat-datepicker-toggle class="mat_datepicker_toggle" matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="dateSelect">
+          <input matInput id="toDate" [matDatepicker]="picker2" [(ngModel)]="toDate" placeholder="To" readonly>
+          <mat-datepicker-toggle class="mat_datepicker_toggle" matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+        <button mat-icon-button (click)="onDateFilter()" data-toggle="tooltip" title="Serach">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+        <button mat-icon-button (click)="onResetDateSearch()" data-toggle="tooltip" title="Reset">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <button mat-raised-button color="primary" (click)="exportToExcel()"> Export to Excel </button>
+    </div>
+  </div>
+  <div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons>
+    </mat-paginator>
+    <div class="table-div">
+      <mat-table [dataSource]="dataSource" matSort>
+        <!-- workflowid Column -->
+        <ng-container matColumnDef="wfL_ID" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Workflow ID </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.wfL_ID}}</span>
+          </mat-cell>
+        </ng-container>
+        <!-- owner Column -->
+        <ng-container matColumnDef="usR_FST_NA" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Requester </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell">
+            <span class="sort-header">{{element.usR_FST_NA}}</span>
+          </mat-cell>
+        </ng-container>
+        <!-- owner Column -->
+        <ng-container matColumnDef="ctY_TXT" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> City </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell">
+            <span class="sort-header">{{element.ctY_TXT}}</span>
+          </mat-cell>
+        </ng-container>
+        <!-- filename Column -->
+        <ng-container matColumnDef="flE_NA" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> File Name </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell">
+            <span class="sort-header">{{element.flE_NA}}</span>
+          </mat-cell>
+        </ng-container>
+        <!--total uploaded address column-->
+        <ng-container matColumnDef="toT_UP_ADR" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Total Uploaded Address</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.toT_UP_ADR}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="toT_TR_ADR" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Total Translated Address </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.toT_TR_ADR}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="toT_TR_ADR_PER" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Total Translated Address(%)</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.toT_TR_ADR_PER}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tR_FRM_ADR_BK" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address from Address Book</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.tR_FRM_ADR_BK}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tR_FRM_ADR_BK_PER" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address from Address Book(%)</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.tR_FRM_ADR_BK_PER}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tR_FRM_TR_TOOL" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address from Translation Tool</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.tR_FRM_TR_TOOL}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tR_FRM_TR_TOOL_PER" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Translated Address from Translation Tool(%)</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.tR_FRM_TR_TOOL_PER}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="adR_MOD" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Total Address with Modification</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.adR_MOD}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="adR_MOD_PER" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Total Address with Modification(%)</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell text-center">
+            <span class="sort-header">{{element.adR_MOD_PER}}</span>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="crD_DT" class="container">
+          <mat-header-cell *matHeaderCellDef class="header-cell" mat-sort-header> Created Date </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="cell">
+            <span class="sort-header">{{element.crD_DT | date: 'MMMM dd, yyyy hh:mm a'}}</span>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="row"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+  <app-loader></app-loader>
+</div>

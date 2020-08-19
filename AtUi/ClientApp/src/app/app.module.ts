@@ -80,6 +80,8 @@ import { ShipperListModelComponent } from './shipper-list/shipper-list-model/shi
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import { AddUserComponent } from './user-registration/add-user/add-user.component';
 import { EditUserComponent } from './user-registration/edit-user/edit-user.component';
+import { SummaryComponent } from './reports/summary/summary.component';
+import { ReportsService } from './services/ReportsService';
 
 @NgModule({
   declarations: [
@@ -119,7 +121,8 @@ import { EditUserComponent } from './user-registration/edit-user/edit-user.compo
     UserRegistrationComponent,
     AddUserComponent,
     EditUserComponent,
-    ShipperListModelComponent
+    ShipperListModelComponent,
+    SummaryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -146,6 +149,7 @@ import { EditUserComponent } from './user-registration/edit-user/edit-user.compo
     DatePipe,
     AuthenticationService,
     NotificationService,
+    ReportsService,
     DataService,
     {
       provide: HTTP_INTERCEPTORS,

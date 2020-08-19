@@ -56,6 +56,7 @@
     <None Remove="ClientApp\src\app\services\HomeService.ts" />
     <None Remove="ClientApp\src\app\services\LoginGuard.ts" />
     <None Remove="ClientApp\src\app\services\NotificationService.ts" />
+    <None Remove="ClientApp\src\app\services\ReportsService.ts" />
     <None Remove="ClientApp\src\app\services\shipping.service.ts" />
     <None Remove="ClientApp\src\app\services\WorkflowService.ts" />
     <None Remove="ClientApp\src\app\shared\Constants.ts" />
@@ -83,6 +84,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\services\HomeService.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\LoginGuard.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\NotificationService.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\ReportsService.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\shipping.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\WorkflowService.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\shared\Constants.ts" />

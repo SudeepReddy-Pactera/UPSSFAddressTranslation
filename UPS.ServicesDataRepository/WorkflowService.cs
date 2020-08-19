@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using UPS.DataObjects.Reports;
+using UPS.DataObjects.Shipment;
 using UPS.DataObjects.UserData;
 using UPS.DataObjects.WR_FLW;
 using UPS.ServicesAsyncActions;
@@ -188,5 +190,67 @@ namespace UPS.ServicesDataRepository
 
             return workflowDataRequests;
         }
+
+
+        public List<SummaryData> getSummaryData(DateTime fromDate, DateTime toDate)
+        {
+            List<SummaryData> data = new List<SummaryData>();
+            var workflowList = from wf in context.workflowDataRequests
+                               join us in context.UserData on  (int?)wf.CRD_BY_NR equals us.ID
+                               where wf.CRD_DT>=fromDate && wf.CRD_DT<toDate.AddDays(1)
+                               orderby wf.ID descending
+                               select new
+                               {
+                                   wf.ID,
+                                   wf.FLE_NA,
+                                   wf.CRD_DT,
+                                   USR_FST_NA = us.FirstName + " " + us.LastName,
+                                   userId=us.ID
+                               };
+            foreach (var workflow in workflowList)
+            {
+                SummaryData summaryData = new SummaryData();
+                List<ShipmentDataRequest> shipmentData = new List<ShipmentDataRequest>();
+                shipmentData = context.shipmentDataRequests.Where(x => x.WFL_ID == workflow.ID).ToList();
+                summaryData.WFL_ID = workflow.ID;
+                summaryData.CTY_TXT = context.UserCityMapping.Where(x => x.UserId == workflow.userId).Select(y => y.City).FirstOrDefault();
+                summaryData.FLE_NA = workflow.FLE_NA;
+                summaryData.USR_FST_NA = workflow.USR_FST_NA;
+                summaryData.CRD_DT = workflow.CRD_DT;
+                summaryData.TOT_UP_ADR = shipmentData.Count();
+                summaryData.TOT_TR_ADR = shipmentData.Where(x=> x.SMT_STA_NR == 2 || x.SMT_STA_NR == 1).Count();
+                if (summaryData.TOT_UP_ADR != 0)
+                {
+                    summaryData.TOT_TR_ADR_PER = Math.Round(((summaryData.TOT_TR_ADR/summaryData.TOT_UP_ADR)*100));
+
+                }
+                else
+                {
+                    summaryData.TOT_TR_ADR_PER = 0;
+                }
+                if (summaryData.TOT_TR_ADR == 0)
+                {
+                    summaryData.TR_FRM_ADR_BK = 0;
+                    summaryData.TR_FRM_ADR_BK_PER = 0;
+                    summaryData.TR_FRM_TR_TOOL = 0;
+                    summaryData.TR_FRM_TR_TOOL_PER = 0;
+                    summaryData.ADR_MOD = 0;
+                    summaryData.ADR_MOD_PER = 0;
+                }
+                else
+                {
+                    summaryData.TR_FRM_ADR_BK = shipmentData.Where(x => x.ADR_SRC == "Address Book").Count();
+                    summaryData.TR_FRM_ADR_BK_PER = Math.Round(((summaryData.TR_FRM_ADR_BK / summaryData.TOT_TR_ADR)*100));
+                    summaryData.TR_FRM_TR_TOOL = shipmentData.Where(x => x.ADR_SRC != "Address Book" && x.ADR_SRC != null).Count();
+                    summaryData.TR_FRM_TR_TOOL_PER = Math.Round(((summaryData.TR_FRM_TR_TOOL / summaryData.TOT_TR_ADR) * 100));
+                    summaryData.ADR_MOD = shipmentData.Where(x => x.SMT_STA_NR == 1).Count();
+                    summaryData.ADR_MOD_PER = Math.Round(((summaryData.ADR_MOD / summaryData.TOT_TR_ADR) * 100));
+                }
+                
+                data.Add(summaryData);
+            }
+            return data;
+        }
+
     }
 }

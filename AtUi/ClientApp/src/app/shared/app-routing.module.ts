@@ -15,6 +15,7 @@ import { AdminconfigComponent } from '../adminconfig/adminconfig.component';
 import { LogGridComponent } from '../log-grid/log-grid.component';
 import { AuditingLogComponent } from '../auditing-log/auditing-log.component';
 import { UserRegistrationComponent } from '../user-registration/user-registration.component';
+import { SummaryComponent } from '../reports/summary/summary.component';
 const routes: Routes = [
 
   { path: '', redirectTo: '/login', pathMatch: 'full', canActivate: [LoginGuard], },
@@ -37,7 +38,8 @@ const routes: Routes = [
       { path: 'logs', canActivate: [AuthGuard], component: LogGridComponent },
       { path: 'auditinglog', canActivate: [AuthGuard], component: AuditingLogComponent },
       { path: 'home', canActivate: [AuthGuard], component: WorkflowComponent },
-      { path: 'user/registration', canActivate: [AuthGuard], component: UserRegistrationComponent }
+      { path: 'user/registration', canActivate: [AuthGuard], component: UserRegistrationComponent },
+      { path: 'summary', canActivate: [AuthGuard], component: SummaryComponent },
     ]
   },
   //{path: 'notauthorized', component: NotauthorizedComponent},
