@@ -20,7 +20,7 @@ export class SummaryComponent implements OnInit {
   filterText: string = '';
   currentDate = new Date();
  // displayedColumns = ['wfL_ID', 'flE_NA', 'usR_FST_NA', 'toT_UP_ADR', 'toT_TR_ADR', 'toT_TR_ADR_PER', 'tR_FRM_ADR_BK', 'tR_FRM_ADR_BK_PER', 'tR_FRM_TR_TOOL', 'tR_FRM_TR_TOOL_PER', 'adR_MOD', 'adR_MOD_PER', 'crD_DT'];
-  displayedColumns = ['wfL_ID', 'usR_FST_NA', 'ctY_TXT', 'flE_NA','toT_UP_ADR', 'toT_TR_ADR', 'toT_TR_ADR_PER', 'tR_FRM_ADR_BK', 'tR_FRM_ADR_BK_PER', 'tR_FRM_TR_TOOL', 'tR_FRM_TR_TOOL_PER', 'adR_MOD', 'adR_MOD_PER'];
+  displayedColumns = ['wfL_ID', 'usR_FST_NA', 'ctY_TXT', 'crD_DT','toT_UP_ADR', 'toT_TR_ADR', 'toT_TR_ADR_PER', 'tR_FRM_ADR_BK', 'tR_FRM_ADR_BK_PER', 'tR_FRM_TR_TOOL', 'tR_FRM_TR_TOOL_PER', 'adR_MOD', 'adR_MOD_PER'];
   dataSource = new MatTableDataSource<Element>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -111,6 +111,7 @@ export class SummaryComponent implements OnInit {
             'Workflow ID': data.wfL_ID,
             'Requester': data.usR_FST_NA,
             'City': data.ctY_TXT,
+            'Created Date':this.datepipe.transform(data.crD_DT, 'MMMM dd, yyyy hh:mm a'),
             'Total Uploaded Address': data.toT_UP_ADR,
             'Total Translated Address': data.toT_TR_ADR,
             'Total Translated Address(%)': data.toT_TR_ADR_PER,

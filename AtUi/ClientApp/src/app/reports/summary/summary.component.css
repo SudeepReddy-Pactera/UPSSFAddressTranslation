@@ -99,6 +99,18 @@ mat-header-cell:nth-child(1) {
   font-weight: bold;
 }
 
+mat-cell:nth-child(3) {
+  width: 60px;
+  flex: none;
+  font-size: 12px;
+}
+
+mat-header-cell:nth-child(3) {
+  width: 60px;
+  flex: none;
+  font-weight: bold;
+}
+
 /*
 mat-cell:nth-child(2) {
   margin-left: 0px 5px 0px 5px;
