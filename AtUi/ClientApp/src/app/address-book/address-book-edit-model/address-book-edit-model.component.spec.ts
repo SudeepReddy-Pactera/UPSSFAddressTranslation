@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddressBookEditModelComponent } from './address-book-edit-model.component';
 
@@ -6,7 +6,7 @@ describe('AddressBookEditModelComponent', () => {
   let component: AddressBookEditModelComponent;
   let fixture: ComponentFixture<AddressBookEditModelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddressBookEditModelComponent ]
     })

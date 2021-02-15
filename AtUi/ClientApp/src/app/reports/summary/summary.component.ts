@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReportsService } from '../../services/ReportsService';
-import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../shared/loader/loader.service';
 import { NotificationService } from '../../services/NotificationService';
 import { ExcelService } from '../../services/ExcelExport';

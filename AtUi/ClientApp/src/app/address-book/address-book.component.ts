@@ -1,5 +1,8 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatDialog, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AddressBookService } from '../services/AddressBookService';
 import { ShipperListService } from '../services/ShipperListService';

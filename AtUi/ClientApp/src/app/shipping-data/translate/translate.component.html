@@ -9,8 +9,8 @@
   </div>
   <div class="col-md-6 text-right">
     <label>Selected row count : {{selection.selected.length}}</label>
-    <button mat-raised-button color="primary" (click)="sendForTranslate()"> Translate </button>
-    <button mat-raised-button color="primary" (click)="exportToExcel()"> Export to Excel </button>
+    <button mat-raised-button color="primary" class='ml15' (click)="sendForTranslate()"> Translate </button>
+    <button mat-raised-button color="primary" class='ml15' (click)="exportToExcel()"> Export to Excel </button>
   </div>
 </div>
 <div class="rowPaginator">
@@ -34,7 +34,7 @@
                         [aria-label]="checkboxLabel()">
           </mat-checkbox>
         </mat-header-cell>
-        <mat-cell *matCellDef="let row">
+        <mat-cell *matCellDef="let row" >
           <mat-checkbox (click)="rowChecked($event, row)"
                         (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)"

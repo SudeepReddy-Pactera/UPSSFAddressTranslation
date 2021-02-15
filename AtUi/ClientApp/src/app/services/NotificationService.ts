@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Constants } from '../shared/Constants';
 
 
@@ -14,8 +15,7 @@ export class NotificationService {
       {
         duration: Constants.SNAKBAR_SHOW_DURATION,
         verticalPosition: "top",
-        horizontalPosition: "right",
-        extraClasses: 'custom-class-success'
+        horizontalPosition: "right"
       });
   }
 
@@ -25,8 +25,7 @@ export class NotificationService {
       {
         duration: Constants.SNAKBAR_SHOW_DURATION,
         verticalPosition: "top",
-        horizontalPosition: "right",
-        extraClasses: 'custom-class-error'
+        horizontalPosition: "right"
       });
   }
 }

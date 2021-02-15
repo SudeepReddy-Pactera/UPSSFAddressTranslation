@@ -1,7 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarConfig, MatProgressSpinner, MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '../services/UserService';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';  
 import * as XLSX from 'xlsx';
 import { FormControl } from '@angular/forms';

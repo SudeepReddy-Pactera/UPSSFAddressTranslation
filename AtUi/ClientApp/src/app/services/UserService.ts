@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { List } from 'linq-typescript';
 import { HttpService } from '../shared/http.service';

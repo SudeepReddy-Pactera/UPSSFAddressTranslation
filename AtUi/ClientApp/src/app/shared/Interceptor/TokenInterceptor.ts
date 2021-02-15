@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 
 
+@Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 constructor() {}
 

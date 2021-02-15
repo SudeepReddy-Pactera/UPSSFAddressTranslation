@@ -1,6 +1,9 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { ShipmentDetails } from '../../models/shipmentdetails';
-import { MatPaginator, MatTableDataSource, MatSort, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
 import { ShippingService } from '../../services/shipping.service';

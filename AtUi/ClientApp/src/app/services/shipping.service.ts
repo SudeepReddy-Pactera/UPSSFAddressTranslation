@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { HttpService } from '../shared/http.service';
 import { ShipmentDetails } from '../models/shipmentDetails';

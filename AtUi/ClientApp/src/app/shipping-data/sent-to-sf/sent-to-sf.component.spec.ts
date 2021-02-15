@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SentToSfComponent } from './sent-to-sf.component';
 
@@ -6,7 +6,7 @@ describe('SentToSfComponent', () => {
   let component: SentToSfComponent;
   let fixture: ComponentFixture<SentToSfComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SentToSfComponent ]
     })

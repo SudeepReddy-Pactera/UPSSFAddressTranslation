@@ -18,7 +18,7 @@ import { UserRegistrationComponent } from '../user-registration/user-registratio
 import { SummaryComponent } from '../reports/summary/summary.component';
 const routes: Routes = [
 
-  { path: '', redirectTo: '/login', pathMatch: 'full', canActivate: [LoginGuard], },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
     path: 'login',
     component: LoginlayoutComponent,
@@ -47,7 +47,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

@@ -110,7 +110,9 @@ mat-header-cell:nth-child(3) {
   flex: none;
   font-weight: bold;
 }
-
+.sort-header{
+  width: 100%;
+}
 /*
 mat-cell:nth-child(2) {
   margin-left: 0px 5px 0px 5px;
